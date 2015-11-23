@@ -1,0 +1,7 @@
+# Input tape for 3-state Busy Beaver Problem
+
+# Blank
+0
+
+# List
+[0]

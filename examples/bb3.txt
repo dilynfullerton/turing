@@ -1,0 +1,27 @@
+# Busy Beaver Problem: 3 states
+
+# States
+{A, B, C, HALT}
+
+# Initial state
+A
+
+# Final states
+{HALT}
+
+# Alphabet
+{0, 1}
+
+# Blank
+0
+
+# Input alphabet
+{1}
+
+# Transition function
+<A, 0, 1, r, B>
+<A, 1, 1, l, C>
+<B, 0, 1, l, A>
+<B, 1, 1, r, B>
+<C, 0, 1, l, B>
+<C, 1, 1, r, HALT>
