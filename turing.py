@@ -219,6 +219,8 @@ class TuringMachine:
         self._input_alphabet = frozenset(input_alphabet)
         self._blank = blank
         self._tf = transition_function
+        if not self._is_consistent_turing_machine_definition():
+            raise InvalidTuringMachineDefinitionException()
 
     def compute(self, input_tape: Tape, print_results: bool=False):
         """Computes the input in accordance with the Turing Machine's properties
@@ -249,6 +251,65 @@ class TuringMachine:
         if print_results:
             print(current_tape)
         return current_tape
+
+    def _is_consistent_turing_machine_definition(self):
+        """Checks whether the given Turing Machine definition is consistent and
+        complete, based on its 7 parameter definition
+
+        :return: True if the definition is consistent and complete, False otherwise
+        """
+        if self._state0 not in self._states:
+            return False
+        if not self._final_states.issubset(self._states):
+            return False
+        if self._blank not in self._alphabet:
+            return False
+        if not self._input_alphabet.issubset(self._alphabet):
+            return False
+        if not self._is_valid_transition_function():
+            return False
+        return True
+
+    def _is_valid_transition_function(self):
+        """Tests whether the given transition function definition is valid by
+        ensuring that
+          + each state in states has a set of associated transitions for each
+            value in the alphabet
+          + each transition tuple contains a write value, a move direction, and a
+            next state
+          + each write value is contained in the alphabet
+          + each move value is either 'l' or 'r'
+          + each next state is contained in the set of states
+
+        :return: True if the transition function is consistent and complete with
+        respect to the Turing Machine parameters and False otherwise
+        """
+        for state in self._states - self._final_states:
+            for value in self._alphabet:
+                trans = self._tf.transition(state, value)
+                if not self._is_valid_transition_tuple(state, value, trans):
+                    return False
+            else:
+                continue
+        else:
+            return True
+
+    def _is_valid_transition_tuple(self, state, value, t: Transition):
+        if state not in self._states - self._final_states:
+            return False
+        if value not in self._alphabet:
+            return False
+        if t.write not in self._alphabet:
+            return False
+        if t.move not in MoveDirection:
+            return False
+        if t.next_state not in self._states:
+            return False
+        return True
+
+
+class InvalidTuringMachineDefinitionException(Exception):
+    pass
 
 
 def turing_machine_from_file(filename: str):
@@ -295,22 +356,10 @@ def turing_machine_from_file(filename: str):
 
     # Get initial state
     tm_initial_state = str(cured_lines.popleft())
-    if tm_initial_state not in tm_states:
-        print(repr(tm_states))
-        print(repr(tm_initial_state))
-        raise InvalidTuringMachineFileDefinitionException(
-            '{f}: The given initial state {i} was not included in the set of '
-            'possible states.'.format(f=filename, i=tm_initial_state)
-        )
 
     # Get final states
     final_states_str = cured_lines.popleft()
     tm_final_states = frozenset(_set_parse(final_states_str))
-    if not tm_final_states.issubset(tm_states):
-        raise InvalidTuringMachineFileDefinitionException(
-            '{f}: The given set of final states is not contained in the given'
-            ' set of states.'.format(f=filename)
-        )
 
     # Get alphabet
     alphabet_str = cured_lines.popleft()
@@ -318,26 +367,13 @@ def turing_machine_from_file(filename: str):
 
     # Get blank
     tm_blank = str(cured_lines.popleft())
-    if tm_blank not in tm_alphabet:
-        raise InvalidTuringMachineFileDefinitionException(
-            '{f}: The given blank value is not contained in the given'
-            'alphabet.'.format(f=filename)
-        )
 
     # Get input alphabet
     in_alphabet_str = cured_lines.popleft()
     tm_input_alphabet = frozenset(_set_parse(in_alphabet_str))
-    if not tm_input_alphabet.issubset(tm_alphabet - {tm_blank}):
-        raise InvalidTuringMachineFileDefinitionException(
-            '{f}: The given input alphabet is not contained in the set obtained'
-            'by subtracting the blank from the alphabet.'.format(f=filename)
-        )
 
     # Get transition function
-    tm_transition_function = _transition_function_from_lines(cured_lines,
-                                                             tm_states,
-                                                             tm_final_states,
-                                                             tm_alphabet)
+    tm_transition_function = _transition_function_from_lines(cured_lines)
 
     return TuringMachine(states=tm_states,
                          initial_state=tm_initial_state,
@@ -348,18 +384,12 @@ def turing_machine_from_file(filename: str):
                          transition_function=tm_transition_function)
 
 
-def _transition_function_from_lines(lines: Iterable,
-                                    states, final_states, alphabet):
+def _transition_function_from_lines(lines: Iterable):
     tf = dict()
     for line_str in lines:
         state, value, write, move_str, next_state = _set_parse(line_str)
         move = move_str.lower()[0]
         transition = Transition(write, move, next_state)
-        if not _is_valid_transition_tuple(state, value, transition,
-                                          states, final_states, alphabet):
-            raise InvalidTuringMachineFileDefinitionException(
-                'Invalid transition function.'
-            )
         if state not in tf.keys():
             tf[state] = dict()
         tf[state][value] = transition
@@ -380,35 +410,6 @@ def _move_from_move_str(move_str: str):
             )
 
 
-def _is_valid_transition_tuple(state, value, t: Transition,
-                               states_set, final_states_set, alphabet_set):
-    if state not in states_set:
-        raise InvalidTuringMachineFileDefinitionException(
-                'The transition function state {s} is not a defined'
-                'state.'.format(s=state)
-            )
-    if value not in alphabet_set:
-        raise InvalidTuringMachineFileDefinitionException(
-                'The transition function value {v} is not defined in the'
-                'alphabet.'.format(v=value)
-            )
-    if t.write not in alphabet_set:
-        raise InvalidTuringMachineFileDefinitionException(
-                'The transition function write value {w} is not defined in'
-                'the alphabet.'.format(w=t.write)
-            )
-    if t.next_state not in states_set:
-        raise InvalidTuringMachineFileDefinitionException(
-                'The transition function next state {s} is not a defined'
-                'state.'.format(s=state)
-            )
-    return True
-
-
-class InvalidTuringMachineFileDefinitionException(Exception):
-    pass
-
-
 def _is_acceptable_line(line: str):
     return line[0] != '#' and len(line.strip(' \n\t\r')) > 0
 
@@ -417,3 +418,7 @@ def _set_parse(set_str: str):
     trimmed_set = set_str.strip(' \n\t\r{}[]<>')
     elements = trimmed_set.split(',')
     return map(lambda s: s.strip(), elements)
+
+
+class InvalidTuringMachineFileDefinitionException(Exception):
+    pass
