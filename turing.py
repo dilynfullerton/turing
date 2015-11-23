@@ -3,6 +3,7 @@ from collections import namedtuple
 from collections import deque
 from enum import Enum
 
+DEFAULT_FILE_INPUT_DELIMITER = ','
 
 Transition = namedtuple('Transition', ['write', 'move', 'next_state'])
 
@@ -140,7 +141,7 @@ class Tape:
         return repr(self._tape)
 
 
-def tape_from_file(filename: str):
+def tape_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
     with open(filename) as f:
         lines_list = f.readlines()
     informative_lines = filter(lambda line: _is_acceptable_line(line),
@@ -156,7 +157,7 @@ def tape_from_file(filename: str):
     blank = cured_lines.popleft()
     input_tape_str = cured_lines.popleft()
     input_items = map(lambda s: s.strip(' \n\r\t{}[]<>'),
-                      input_tape_str.split(','))
+                      input_tape_str.split(delim))
     input_tape = list(input_items)
     return Tape(blank, input_tape, start_index)
 
@@ -315,7 +316,7 @@ class InvalidTuringMachineDefinitionException(Exception):
     pass
 
 
-def turing_machine_from_file(filename: str):
+def turing_machine_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
     """Produces a Turing Machine object from a file. The file should follow
     the following grammar
 
@@ -355,28 +356,28 @@ def turing_machine_from_file(filename: str):
                             informative_lines))
     # Get states
     states_str = cured_lines.popleft()
-    tm_states = frozenset(_set_parse(states_str))
+    tm_states = frozenset(_set_parse(states_str, delim))
 
     # Get initial state
     tm_initial_state = str(cured_lines.popleft())
 
     # Get final states
     final_states_str = cured_lines.popleft()
-    tm_final_states = frozenset(_set_parse(final_states_str))
+    tm_final_states = frozenset(_set_parse(final_states_str, delim))
 
     # Get alphabet
     alphabet_str = cured_lines.popleft()
-    tm_alphabet = frozenset(_set_parse(alphabet_str))
+    tm_alphabet = frozenset(_set_parse(alphabet_str, delim))
 
     # Get blank
     tm_blank = str(cured_lines.popleft())
 
     # Get input alphabet
     in_alphabet_str = cured_lines.popleft()
-    tm_input_alphabet = frozenset(_set_parse(in_alphabet_str))
+    tm_input_alphabet = frozenset(_set_parse(in_alphabet_str, delim))
 
     # Get transition function
-    tm_transition_function = _transition_function_from_lines(cured_lines)
+    tm_transition_function = _transition_function_from_lines(cured_lines, delim)
 
     return TuringMachine(states=tm_states,
                          initial_state=tm_initial_state,
@@ -387,10 +388,10 @@ def turing_machine_from_file(filename: str):
                          transition_function=tm_transition_function)
 
 
-def _transition_function_from_lines(lines: Iterable):
+def _transition_function_from_lines(lines: Iterable, delim: str):
     tf = dict()
     for line_str in lines:
-        state, value, write, move_str, next_state = _set_parse(line_str)
+        state, value, write, move_str, next_state = _set_parse(line_str, delim)
         move = move_str.lower()[0]
         transition = Transition(write, move, next_state)
         if state not in tf.keys():
@@ -417,9 +418,9 @@ def _is_acceptable_line(line: str):
     return line[0] != '#' and len(line.strip(' \n\t\r')) > 0
 
 
-def _set_parse(set_str: str):
+def _set_parse(set_str: str, delim):
     trimmed_set = set_str.strip(' \n\t\r{}[]<>')
-    elements = trimmed_set.split(',')
+    elements = trimmed_set.split(delim)
     return map(lambda s: s.strip(), elements)
 
 
