@@ -147,7 +147,10 @@ def tape_from_file(filename: str):
                                lines_list)
     cured_lines = deque(map(lambda line: line.strip(' \n\r\t{}[]<>'),
                             informative_lines))
-    if len(cured_lines) != 2:
+    start_index = 0
+    if len(cured_lines) == 3:
+        start_index = int(cured_lines.pop())
+    elif len(cured_lines) != 2:
         raise InvalidTapeFromFileException('A blank value and a single line of '
                                            'tape was expected')
     blank = cured_lines.popleft()
@@ -155,7 +158,7 @@ def tape_from_file(filename: str):
     input_items = map(lambda s: s.strip(' \n\r\t{}[]<>'),
                       input_tape_str.split(','))
     input_tape = list(input_items)
-    return Tape(blank, input_tape)
+    return Tape(blank, input_tape, start_index)
 
 
 class InvalidTapeFromFileException(Exception):
