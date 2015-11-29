@@ -1,0 +1,29 @@
+# Stephen Wolfram's 2 state, 3 color universal Turing Machine
+# source: https://en.wikipedia.org/wiki/Wolfram%27s_2-state_3-symbol_Turing_machine
+
+# States
+{A, B, C}
+
+# Initial state
+A
+
+# Final states
+{C}
+
+# Alphabet
+{0, 1, 2}
+
+# Blank
+0
+
+# Input alphabet
+{1, 2}
+
+# Transition function
+<A, 0, 1, r, B>
+<A, 1, 2, l, A>
+<A, 2, 1, l, A>
+
+<B, 0, 2, l, A>
+<B, 1, 2, r, B>
+<B, 2, 0, r, A>

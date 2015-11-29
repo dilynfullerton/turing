@@ -29,5 +29,20 @@ def main():
         print_results=False
     )
     subtractor.compute(input_tape=tape_from_file('examples/subtract9_5.txt'),
-                       print_results=True)
+                       print_results=False)
+
+    counter = turing_machine_from_file('examples/counter.txt')
+    counter.compute(input_tape=tape_from_file('examples/count_to_16.txt'),
+                    print_results=False)
+
+    adder = turing_machine_from_file('examples/add.txt')
+    adder.compute(input_tape=tape_from_file('examples/add2_2.txt'),
+                  print_results=False)
+
+    wolfram23 = turing_machine_from_file('examples/wolfram2_3.txt')
+    wolfram23.compute(
+        input_tape=tape_from_file('examples/wolfram2_3_input.txt'),
+        print_results=True,
+        max_iter=100
+    )
 main()

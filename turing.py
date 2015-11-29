@@ -4,6 +4,7 @@ from collections import deque
 from enum import Enum
 
 DEFAULT_FILE_INPUT_DELIMITER = ','
+DEFAULT_MAX_ITER = 10000
 
 
 class Transition(namedtuple('Transition', ['write', 'move', 'next_state'])):
@@ -240,9 +241,12 @@ class TuringMachine:
         if not self._is_consistent_turing_machine_definition():
             raise InvalidTuringMachineDefinitionException()
 
-    def compute(self, input_tape: Tape, print_results: bool=False):
+    def compute(self, input_tape: Tape,
+                print_results: bool=False,
+                max_iter=DEFAULT_MAX_ITER):
         """Computes the input in accordance with the Turing Machine properties
 
+        :param max_iter: the maximum number of iterations to allow
         :param input_tape: the tape to process; must be initialized only with
         elements that are either blank or are in the input alphabet
         :param print_results: if true, prints out a string representation of
@@ -259,6 +263,9 @@ class TuringMachine:
         all_transitions = list()
 
         while True:
+            if num_iter >= max_iter:
+                break
+
             if current_state in self._final_states:
                 break
 
