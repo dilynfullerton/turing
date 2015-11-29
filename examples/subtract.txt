@@ -1,0 +1,63 @@
+# Subtraction
+# Given an input consisting of two sets of ones separated by a blank, subtracts
+# right side number from the left
+# source: http://aturingmachine.com/examplesSub.php
+
+# States
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, H}
+
+# Initial state
+0
+
+# Final states
+{H}
+
+# Alphabet
+{0, 1, B}
+
+# Blank
+B
+
+# Input alphabet
+{0, 1}
+
+# Transition function
+<0, 0, 0, r, 0>
+<0, 1, 1, r, 0>
+<0, B, B, r, 1>
+
+<1, 0, 0, r, 1>
+<1, 1, 1, r, 1>
+<1, B, B, l, 2>
+
+<2, 0, 0, l, 2>
+<2, 1, 0, l, 3>
+<2, B, B, r, 5>
+
+<3, 0, 0, l, 3>
+<3, 1, 1, l, 3>
+<3, B, B, l, 8>
+
+<4, 0, 0, r, 4>
+<4, 1, 1, r, 4>
+<4, B, B, r, 5>
+
+<5, 0, 0, r, 5>
+<5, 1, 1, r, 5>
+<5, B, B, l, 6>
+
+<6, 0, B, l, 6>
+<6, 1, 1, l, 6>
+<6, B, B, l, 7>
+
+<7, 0, B, l, 7>
+<7, 1, 1, l, 7>
+<7, B, B, r, 9>
+
+<8, 0, 0, l, 8>
+<8, 1, 0, r, 0>
+<8, B, B, r, 4>
+
+<9, 0, 0, r, H>
+<9, 1, 1, r, H>
+<9, B, 0, r, H>

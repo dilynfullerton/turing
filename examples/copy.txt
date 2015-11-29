@@ -1,0 +1,35 @@
+# Copy machine
+
+# States
+{1, 2, 3, 4, 5, H}
+
+# Initial state
+1
+
+# Final states
+{H}
+
+# Alphabet
+{0, 1}
+
+# Blank
+0
+
+# Input alphabet
+{1}
+
+# Transition function
+<1, 0, 0, l, H>
+<1, 1, 0, r, 2>
+
+<2, 0, 0, r, 3>
+<2, 1, 1, r, 2>
+
+<3, 0, 1, l, 4>
+<3, 1, 1, r, 3>
+
+<4, 0, 0, l, 5>
+<4, 1, 1, l, 4>
+
+<5, 0, 1, r, 1>
+<5, 1, 1, l, 5>
