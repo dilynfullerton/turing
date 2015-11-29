@@ -5,7 +5,14 @@ from enum import Enum
 
 DEFAULT_FILE_INPUT_DELIMITER = ','
 
-Transition = namedtuple('Transition', ['write', 'move', 'next_state'])
+
+class Transition(namedtuple('Transition', ['write', 'move', 'next_state'])):
+    __slots__ = ()
+
+    def __str__(self):
+        return '(write {w}, move {m}, next {n})'.format(w=self.write,
+                                                        m=self.move,
+                                                        n=self.next_state)
 
 
 class TransitionFunction:
@@ -37,7 +44,8 @@ class TransitionFunction:
           wij = write value associated with the ith state and jth read value
           dij = direction string 'l' or 'r' associated with the ith state and
                 jth read value
-          nsij = the next state associated with the ith state and jth read value
+          nsij = the next state associated with the ith state and jth read 
+                 value
 
         :param transitions_map: a dictionary of the form specified above, which
         is to be converted into a transition function
@@ -79,10 +87,16 @@ class InvalidInputForTuringMachineException(Exception):
 
 
 class MoveDirection(Enum):
-    """Represents the possible move directions of the head of the turing machine
+    """Represents the possible move directions of the turing machine head
     """
     left = 0
     right = 1
+
+    def __str__(self):
+        if self == MoveDirection.left:
+            return 'L'
+        elif self == MoveDirection.right:
+            return 'R'
 
 
 class Tape:
@@ -99,7 +113,7 @@ class Tape:
         self._index = start_index
 
     def move(self, direction: MoveDirection):
-        """Moves the head of the turing machine one space in the given direction
+        """Moves the turing machine head one space in the given direction
 
         :param direction: the direction to move the head or the Turing Machine
         """
@@ -152,8 +166,8 @@ def tape_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
     if len(cured_lines) == 3:
         start_index = int(cured_lines.pop())
     elif len(cured_lines) != 2:
-        raise InvalidTapeFromFileException('A blank value and a single line of '
-                                           'tape was expected')
+        raise InvalidTapeFromFileException('A blank value and a single line of'
+                                           ' tape was expected')
     blank = cured_lines.popleft()
     input_tape_str = cured_lines.popleft()
     input_items = map(lambda s: s.strip(' \n\r\t{}[]<>'),
@@ -167,8 +181,8 @@ class InvalidTapeFromFileException(Exception):
 
 
 def blank_tape(blank, length: int, start_index: int=0):
-    """Returns a blank Turing Machine tape with the specified blank item, length
-    and starting index
+    """Returns a blank Turing Machine tape with the specified blank item, 
+    length and starting index
 
     :param blank: the item to add (represents a blank)
     :param length: the length of the tape to produce; note that the Turing
@@ -227,40 +241,68 @@ class TuringMachine:
             raise InvalidTuringMachineDefinitionException()
 
     def compute(self, input_tape: Tape, print_results: bool=False):
-        """Computes the input in accordance with the Turing Machine's properties
+        """Computes the input in accordance with the Turing Machine properties
 
         :param input_tape: the tape to process; must be initialized only with
         elements that are either blank or are in the input alphabet
-        :param print_results: if true, prints out a string representation of the
-        tape for each step
-        :return: the tape, as it is after being operated on
+        :param print_results: if true, prints out a string representation of
+        the tape for each step
+        :return: the tape as it is after being operated on
         """
         current_tape = input_tape
         current_state = self._state0
+
+        # Accumulators
+        num_iter = 0
+        all_tapes = list([str(current_tape)])
+        all_states = list([str(current_state)])
+        all_transitions = list()
+
         while True:
-            if print_results:
-                print(current_tape)
             if current_state in self._final_states:
                 break
+
             current_value = current_tape.read()
             if current_value not in self._alphabet:
                 raise InvalidInputForTuringMachineException(
                     'Turing machine given invalid input '
                     '{0}'.format(current_value)
                 )
+
             transition = self._tf.transition(current_state, current_value)
+
+            # Turing Machine operations
             current_tape.write(transition.write)
             current_tape.move(transition.move)
             current_state = transition.next_state
+
+            # Update accumulators
+            num_iter += 1
+            all_tapes.append(str(current_tape))
+            all_states.append(current_state)
+            all_transitions.append(transition)
+
+        all_transitions.append(None)
+
         if print_results:
-            print(current_tape)
+            for step, state, tape, transition in zip(range(num_iter + 1),
+                                                     all_states,
+                                                     all_tapes,
+                                                     all_transitions):
+                print('Step={i:5}; '
+                      'State={s:5}; '
+                      'Tape={t}; '
+                      'Transition={n};;'.format(i=step, s=state, t=tape,
+                                                n=transition))
+
         return current_tape
 
     def _is_consistent_turing_machine_definition(self):
         """Checks whether the given Turing Machine definition is consistent and
         complete, based on its 7 parameter definition
 
-        :return: True if the definition is consistent and complete, False otherwise
+        :return: True if the definition is consistent and complete, 
+        False otherwise
         """
         if self._state0 not in self._states:
             return False
@@ -279,14 +321,14 @@ class TuringMachine:
         ensuring that
           + each state in states has a set of associated transitions for each
             value in the alphabet
-          + each transition tuple contains a write value, a move direction, and a
-            next state
+          + each transition tuple contains a write value, a move direction, 
+            and a next state
           + each write value is contained in the alphabet
           + each move value is either 'l' or 'r'
           + each next state is contained in the set of states
 
-        :return: True if the transition function is consistent and complete with
-        respect to the Turing Machine parameters and False otherwise
+        :return: True if the transition function is consistent and complete 
+        with respect to the Turing Machine parameters and False otherwise
         """
         for state in self._states - self._final_states:
             for value in self._alphabet:
@@ -316,7 +358,8 @@ class InvalidTuringMachineDefinitionException(Exception):
     pass
 
 
-def turing_machine_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
+def turing_machine_from_file(filename: str,
+                             delim: str=DEFAULT_FILE_INPUT_DELIMITER):
     """Produces a Turing Machine object from a file. The file should follow
     the following grammar
 
@@ -345,6 +388,7 @@ def turing_machine_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
     <write> ::= <string>
     <move> ::= l | left | r | right
 
+    :param delim:
     :param filename: the file from which to produce the Turing Machine
     :return: the Turing Machine object produced from the file's specifications
     """
@@ -377,7 +421,8 @@ def turing_machine_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
     tm_input_alphabet = frozenset(_set_parse(in_alphabet_str, delim))
 
     # Get transition function
-    tm_transition_function = _transition_function_from_lines(cured_lines, delim)
+    tm_transition_function = _transition_function_from_lines(cured_lines,
+                                                             delim)
 
     return TuringMachine(states=tm_states,
                          initial_state=tm_initial_state,
