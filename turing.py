@@ -4,6 +4,7 @@ from collections import deque
 from enum import Enum
 
 DEFAULT_FILE_INPUT_DELIMITER = ','
+DEFAULT_TAPE_DELIMITER = '|'
 DEFAULT_MAX_ITER = 10000
 
 
@@ -101,7 +102,8 @@ class MoveDirection(Enum):
 
 
 class Tape:
-    def __init__(self, blank, initial_tape: list, start_index: int=0):
+    def __init__(self, blank, initial_tape: list, start_index: int=0,
+                 tape_delim: str=DEFAULT_TAPE_DELIMITER):
         """Creates a tape object for use with a Turing Machine
 
         :param blank: the item to be interpreted as a blank
@@ -112,6 +114,8 @@ class Tape:
         self._tape = initial_tape
         self._blank = blank
         self._index = start_index
+
+        self._delim = tape_delim
 
     def move(self, direction: MoveDirection):
         """Moves the turing machine head one space in the given direction
@@ -143,25 +147,25 @@ class Tape:
         self._tape[self._index] = item
 
     def __str__(self):
-        s = '['
+        s = '[|'
         for item in self._tape:
             if item is self._blank:
-                s += ' , '
+                s += ' {d}'.format(d=self._delim)
             else:
-                s += '{0}, '.format(str(item))
-        s = s[:-2] + ']'
+                s += '{0}{d}'.format(str(item), d=self._delim)
+        s += ']'
         return s
 
     def __repr__(self):
         return repr(self._tape)
 
 
-def tape_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
+def tape_from_file(filename: str, delim=DEFAULT_TAPE_DELIMITER):
     with open(filename) as f:
         lines_list = f.readlines()
     informative_lines = filter(lambda line: _is_acceptable_line(line),
                                lines_list)
-    cured_lines = deque(map(lambda line: line.strip(' \n\r\t{}[]<>'),
+    cured_lines = deque(map(lambda line: line.strip(' \n\r\t{}[]<>' + delim),
                             informative_lines))
     start_index = 0
     if len(cured_lines) == 3:
@@ -178,6 +182,10 @@ def tape_from_file(filename: str, delim=DEFAULT_FILE_INPUT_DELIMITER):
 
 
 class InvalidTapeFromFileException(Exception):
+    pass
+
+
+class InvalidInputTapeException(Exception):
     pass
 
 
@@ -241,19 +249,27 @@ class TuringMachine:
         if not self._is_consistent_turing_machine_definition():
             raise InvalidTuringMachineDefinitionException()
 
-    def compute(self, input_tape: Tape,
+    def compute(self, input_tape,
                 print_results: bool=False,
                 max_iter=DEFAULT_MAX_ITER):
         """Computes the input in accordance with the Turing Machine properties
 
         :param max_iter: the maximum number of iterations to allow
-        :param input_tape: the tape to process; must be initialized only with
+        :param input_tape: the tape to process (either a Tape object or a
+        filename from which to generate the tape); must be initialized only with
         elements that are either blank or are in the input alphabet
         :param print_results: if true, prints out a string representation of
         the tape for each step
         :return: the tape as it is after being operated on
         """
-        current_tape = input_tape
+        if isinstance(input_tape, Tape):
+            current_tape = input_tape
+        elif isinstance(input_tape, str):
+            current_tape = tape_from_file(input_tape)
+        else:
+            raise InvalidInputTapeException('Tape input should either be a '
+                                            'Tape or a filename from which to'
+                                            'generate a Tape')
         current_state = self._state0
 
         # Accumulators

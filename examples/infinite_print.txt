@@ -1,0 +1,23 @@
+# Goes to the right printing 1's indefinitely
+
+# States
+{0, 1}
+
+# Initial state
+0
+
+# Final states
+{1}
+
+# Alphabet
+{0, 1}
+
+# Blank
+0
+
+# Input alphabet
+{1}
+
+# Transition function
+<0, 0, 1, r, 0>
+<0, 1, 1, r, 0>

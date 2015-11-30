@@ -4,6 +4,6 @@
 B
 
 # Tape
-[0, 0, 0, 0]
+[|0|0|0|0|]
 
 # Optional starting index (default is 0)
