@@ -6,6 +6,8 @@ from enum import Enum
 DEFAULT_FILE_INPUT_DELIMITER = ','
 DEFAULT_TAPE_DELIMITER = '|'
 DEFAULT_MAX_ITER = 10000
+DEFAULT_CURRENT_INDEX_COLOR = '\033[93m'
+END_COLOR = '\033[0m'
 
 
 class Transition(namedtuple('Transition', ['write', 'move', 'next_state'])):
@@ -103,7 +105,9 @@ class MoveDirection(Enum):
 
 class Tape:
     def __init__(self, blank, initial_tape: list, start_index: int=0,
-                 tape_delim: str=DEFAULT_TAPE_DELIMITER):
+                 tape_delim: str=DEFAULT_TAPE_DELIMITER,
+                 current_index_color: str=DEFAULT_CURRENT_INDEX_COLOR,
+                 end_color: str=END_COLOR):
         """Creates a tape object for use with a Turing Machine
 
         :param blank: the item to be interpreted as a blank
@@ -116,6 +120,8 @@ class Tape:
         self._index = start_index
 
         self._delim = tape_delim
+        self._current_color = current_index_color
+        self._end_color = end_color
 
     def move(self, direction: MoveDirection):
         """Moves the turing machine head one space in the given direction
@@ -147,13 +153,16 @@ class Tape:
         self._tape[self._index] = item
 
     def __str__(self):
-        s = '[|'
-        for item in self._tape:
+        s = '['
+        for item, index in zip(self._tape, range(len(self._tape))):
             if item is self._blank:
-                s += ' {d}'.format(d=self._delim)
+                add_str = '{d} '.format(d=self._delim)
             else:
-                s += '{0}{d}'.format(str(item), d=self._delim)
-        s += ']'
+                add_str = '{d}{0}'.format(str(item), d=self._delim)
+            if index == self._index:
+                    add_str = self._current_color + add_str + self._end_color
+            s += add_str
+        s += '|]'
         return s
 
     def __repr__(self):

@@ -42,7 +42,7 @@ def main():
     wolfram23 = turing_machine_from_file('examples/wolfram2_3.txt')
     wolfram23.compute(
         input_tape='examples/wolfram2_3_input.txt',
-        print_results=True, max_iter=100)
+        print_results=False, max_iter=150)
 
     infinite_printer = turing_machine_from_file('examples/infinite_print.txt')
     infinite_printer.compute(
