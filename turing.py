@@ -98,9 +98,9 @@ class MoveDirection(Enum):
 
     def __str__(self):
         if self == MoveDirection.left:
-            return 'L'
+            return chr(10229)
         elif self == MoveDirection.right:
-            return 'R'
+            return chr(10230)
 
 
 class Tape:

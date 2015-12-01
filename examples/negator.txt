@@ -1,0 +1,28 @@
+# Negator: Goes into an infinite loop if given 1, terminates with a 1 if given 0
+
+# States
+{0, 1, H, R}
+
+# Initial state
+0
+
+# Final states
+{H, R}
+
+# Alphabet
+{0, 1, b}
+
+# Blank
+b
+
+# Input alphabet
+{0, 1}
+
+# Transition function
+<0, 0, 1, r, H>
+<0, 1, 1, r, 1>
+<0, b, b, r, R>
+
+<1, 0, 0, l, 0>
+<1, 1, 1, l, 0>
+<1, b, b, l, 0>

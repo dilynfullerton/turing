@@ -1,0 +1,9 @@
+# Negator given a 0 (Halting machine says will not halt), negator halts
+
+# Blank
+b
+
+# Input tape
+[|0|b|]
+
+# Starting index

@@ -49,8 +49,19 @@ def main():
         input_tape='examples/infinite_print_input.txt',
         print_results=False, max_iter=100)
 
-    copy_machine9000 = turing_machine_from_file('examples/full_copy.txt')
+    copy_machine9000 = turing_machine_from_file('examples/binary_copy.txt')
     copy_machine9000.compute(
-        input_tape='examples/full_copy_input.txt',
+        input_tape='examples/binary_copy_input.txt',
         print_results=True)
+
+    negator = turing_machine_from_file('examples/negator.txt')
+    negator.compute(
+        input_tape='examples/negator_input0.txt',
+        print_results=False
+    )
+    negator.compute(
+        input_tape='examples/negator_input1.txt',
+        print_results=False,
+        max_iter=100
+    )
 main()
