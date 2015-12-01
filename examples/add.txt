@@ -1,4 +1,4 @@
-# Adds to numbers separated by a 0
+# Adds two numbers separated by a 0
 # http://simplycomputing.com.au/turing/turing-machine-examples/
 
 # States
