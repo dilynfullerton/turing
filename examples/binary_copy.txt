@@ -1,4 +1,5 @@
-# Copy machine
+# Copy machine that I wrote for copying binary numbers.
+# Assumes starting at the first digit of the number
 
 # States
 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, :), :(, c0, c1}
@@ -10,7 +11,7 @@
 {:), :(}
 
 # Alphabet
-{0, 1, b, b., 1., 0.}
+{0, 1, b, ., 1., 0.}
 
 # Blank
 b
@@ -25,7 +26,7 @@ b
 <0, b, b, r, :(>
 <0, 0., 0., r, :(>
 <0, 1., 1., r, :(>
-<0, b., b., r, :(>
+<0, ., ., r, :(>
 
 # State 1: Find the position of the copy location
 <1, 0, 0, r, 1>
@@ -33,15 +34,15 @@ b
 <1, b, b, r, 2>
 <1, 0., 0., r, :(>
 <1, 1., 1., r, :(>
-<1, b., b., r, :(>
+<1, ., ., r, :(>
 
 # State 2: Mark the current location for later copy
 <2, 0, 0, r, :(>
 <2, 1, 1, r, :(>
-<2, b, b., l, 3>
+<2, b, ., l, 3>
 <2, 0., 0., r, :(>
 <2, 1., 1., r, :(>
-<2, b., b., r, :(>
+<2, ., ., r, :(>
 
 # State 3: Go back and get the marked character
 <3, 0, 0, l, 3>
@@ -49,7 +50,7 @@ b
 <3, b, b, l, 3>
 <3, 0., 0., r, c0>
 <3, 1., 1., r, c1>
-<3, b., b., l, :(>
+<3, ., ., l, :(>
 
 # State c0: Copy 0 to the marked blank
 <c0, 0, 0, r, c0>
@@ -57,7 +58,7 @@ b
 <c0, b, b, r, c0>
 <c0, 0., 0., r, :(>
 <c0, 1., 1., r, :(>
-<c0, b., 0, r, 4>
+<c0, ., 0, r, 4>
 
 # State c1: Copy 1 to the marked blank
 <c1, 0, 0, r, c1>
@@ -65,15 +66,15 @@ b
 <c1, b, b, r, c1>
 <c1, 0., 0., r, :(>
 <c1, 1., 1., r, :(>
-<c1, b., 1, r, 4>
+<c1, ., 1, r, 4>
 
 # State 4: Mark current blank for later copy then go back and switch mark forward
 <4, 0, 0, r, :(>
 <4, 1, 1, r, :(>
-<4, b, b., l, 5>
+<4, b, ., l, 5>
 <4, 0., 0., r, :(>
 <4, 1., 1., r, :(>
-<4, b., b., r, :(>
+<4, ., ., r, :(>
 
 # State 5: Find the copy mark, erase it, and move it forward
 <5, 0, 0, l, 5>
@@ -81,7 +82,7 @@ b
 <5, b, b, l, 5>
 <5, 0., 0, r, 6>
 <5, 1., 1, r, 6>
-<5, b., b., r, :(>
+<5, ., ., r, :(>
 
 # State 6: Moving the copy mark forward
 <6, 0, 0., r, c0>
@@ -89,7 +90,7 @@ b
 <6, b, b, r, 7>
 <6, 0., 0., r, :(>
 <6, 1., 1., r, :(>
-<6, b., b., r, :(>
+<6, ., ., r, :(>
 
 # State 7: Remove the last mark
 <7, 0, 0, r, 7>
@@ -97,7 +98,7 @@ b
 <7, b, b, r, 7>
 <7, 0., 0., r, :(>
 <7, 1., 1., r, :(>
-<7, b., b, l, 8>
+<7, ., b, l, 8>
 
 # State 8: Go back to the beginning
 <8, 0, 0, l, 8>
@@ -105,7 +106,7 @@ b
 <8, b, b, l, 9>
 <8, 0., 0., r, :(>
 <8, 1., 1., r, :(>
-<8, b., b., r, :(>
+<8, ., ., r, :(>
 
 # State 9: Go back to the beginning and halt
 <9, 0, 0, l, 9>
@@ -113,4 +114,4 @@ b
 <9, b, b, r, :)>
 <9, 0., 0., r, :(>
 <9, 1., 1., r, :(>
-<9, b., b., r, :(>
+<9, ., ., r, :(>
