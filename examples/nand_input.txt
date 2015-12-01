@@ -1,0 +1,7 @@
+# Input for the NAND operator
+
+# Blank
+b
+
+# Input tape
+[|1|1|]

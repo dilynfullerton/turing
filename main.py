@@ -11,7 +11,7 @@ def main():
     busy_beaver4 = turing_machine_from_file('examples/bb4.txt')
     busy_beaver4.compute(
         input_tape='examples/bb4_input.txt',
-        print_results=False)
+        print_results=True)
 
     copy_machine = turing_machine_from_file('examples/copy.txt')
     copy_machine.compute(
@@ -52,7 +52,7 @@ def main():
     copy_machine9000 = turing_machine_from_file('examples/binary_copy.txt')
     copy_machine9000.compute(
         input_tape='examples/binary_copy_input.txt',
-        print_results=True)
+        print_results=False)
 
     negator = turing_machine_from_file('examples/negator.txt')
     negator.compute(
@@ -63,5 +63,11 @@ def main():
         input_tape='examples/negator_input1.txt',
         print_results=False,
         max_iter=100
+    )
+
+    nand = turing_machine_from_file('examples/nand.txt')
+    nand.compute(
+        input_tape='examples/nand_input.txt',
+        print_results=False
     )
 main()

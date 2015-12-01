@@ -1,0 +1,46 @@
+# A NAND operator I wrote
+
+# States
+{0, 1, p0, p1, CLR, :), :(}
+
+# Initial state
+0
+
+# Final states
+{:), :(}
+
+# Alphabet
+{0, 1, b}
+
+# Blank
+b
+
+# Input alphabet
+{0, 1}
+
+# Transition function
+
+# State 0: read first input
+<0, 0, 1, r, CLR>
+<0, 1, b, r, 1>
+<0, b, b, r, :(>
+
+# State 1: read the value, if 1 go left and write 0, if 0 go left and write 1
+<1, 0, b, l, p1>
+<1, 1, b, l, p0>
+<1, b, b, l, :(>
+
+# State p0: print 0 and halt
+<p0, 0, 0, r, :(>
+<p0, 1, 1, r, :(>
+<p0, b, 0, r, CLR>
+
+# State p1: print 1 and halt
+<p1, 0, 0, r, :(>
+<p1, 1, 1, r, :(>
+<p1, b, 1, r, CLR>
+
+# State CLR: clear the value and halt
+<CLR, 0, b, l, :)>
+<CLR, 1, b, l, :)>
+<CLR, b, b, l, :)>
