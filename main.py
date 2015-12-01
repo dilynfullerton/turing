@@ -48,4 +48,9 @@ def main():
     infinite_printer.compute(
         input_tape='examples/infinite_print_input.txt',
         print_results=False, max_iter=100)
+
+    copy_machine9000 = turing_machine_from_file('examples/full_copy.txt')
+    copy_machine9000.compute(
+        input_tape='examples/full_copy_input.txt',
+        print_results=True)
 main()

@@ -1,0 +1,100 @@
+# Copy machine
+
+# States
+{0, 1, 2, 3, 4, 5, 6, 7, :), :(, c0, c1}
+
+# Initial state
+0
+
+# Final states
+{:), :(}
+
+# Alphabet
+{0, 1, b, b., 1., 0.}
+
+# Blank
+b
+
+# Input alphabet
+{0, 1}
+
+# Transition function
+# State 0: Mark the first character
+<0, 0, 0., r, 1>
+<0, 1, 1., r, 1>
+<0, b, b, r, :(>
+<0, 0., 0., r, :(>
+<0, 1., 1., r, :(>
+<0, b., b., r, :(>
+
+# State 1: Find the position of the copy location
+<1, 0, 0, r, 1>
+<1, 1, 1, r, 1>
+<1, b, b, r, 2>
+<1, 0., 0., r, :(>
+<1, 1., 1., r, :(>
+<1, b., b., r, :(>
+
+# State 2: Mark the current location for later copy
+<2, 0, 0, r, :(>
+<2, 1, 1, r, :(>
+<2, b, b., l, 3>
+<2, 0., 0., r, :(>
+<2, 1., 1., r, :(>
+<2, b., b., r, :(>
+
+# State 3: Go back and get the marked character
+<3, 0, 0, l, 3>
+<3, 1, 1, l, 3>
+<3, b, b, l, 3>
+<3, 0., 0., r, c0>
+<3, 1., 1., r, c1>
+<3, b., b., l, :(>
+
+# State c0: Copy 0 to the marked blank
+<c0, 0, 0, r, c0>
+<c0, 1, 1, r, c0>
+<c0, b, b, r, c0>
+<c0, 0., 0., r, :(>
+<c0, 1., 1., r, :(>
+<c0, b., 0, r, 4>
+
+# State c1: Copy 1 to the marked blank
+<c1, 0, 0, r, c1>
+<c1, 1, 1, r, c1>
+<c1, b, b, r, c1>
+<c1, 0., 0., r, :(>
+<c1, 1., 1., r, :(>
+<c1, b., 1, r, 4>
+
+# State 4: Mark current blank for later copy then go back and switch mark forward
+<4, 0, 0, r, :(>
+<4, 1, 1, r, :(>
+<4, b, b., l, 5>
+<4, 0., 0., r, :(>
+<4, 1., 1., r, :(>
+<4, b., b., r, :(>
+
+# State 5: Find the copy mark, erase it, and move it forward
+<5, 0, 0, l, 5>
+<5, 1, 1, l, 5>
+<5, b, b, l, 5>
+<5, 0., 0, r, 6>
+<5, 1., 1, r, 6>
+<5, b., b., r, :(>
+
+# State 6: Moving the copy mark forward
+<6, 0, 0., r, c0>
+<6, 1, 1., r, c1>
+<6, b, b, r, 7>
+<6, 0., 0., r, :(>
+<6, 1., 1., r, :(>
+<6, b., b., r, :(>
+
+# State 7: Remove the last mark
+<7, 0, 0, r, 7>
+<7, 1, 1, r, 7>
+<7, b, b, r, 7>
+<7, 0., 0., r, :(>
+<7, 1., 1., r, :(>
+<7, b., b, l, :)>
