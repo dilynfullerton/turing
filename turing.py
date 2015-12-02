@@ -47,7 +47,8 @@ class TransitionFunction:
           rj = jth possible read value
           wij = write value associated with the ith state and jth read value
           dij = direction string 'l' or 'r' associated with the ith state and
-                jth read value
+                jth read value or a direction left or right of type 
+                MoveDirection
           nsij = the next state associated with the ith state and jth read 
                  value
 
@@ -60,14 +61,15 @@ class TransitionFunction:
             next_read_map = dict()
             for read_value in read_map.keys():
                 transition_tuple = read_map[read_value]
-                write, move_str, next_state = transition_tuple
-                move_char = move_str.lower()[0]
-                if move_char == 'l':
-                    move = MoveDirection.left
-                elif move_char == 'r':
-                    move = MoveDirection.right
-                else:
-                    raise InvalidTransitionsMapException()
+                write, move, next_state = transition_tuple
+                if isinstance(move, str):
+                    move_char = move.lower()[0]
+                    if move_char == 'l':
+                        move = MoveDirection.left
+                    elif move_char == 'r':
+                        move = MoveDirection.right
+                    else:
+                        raise InvalidTransitionsMapException()
                 next_read_map[read_value] = Transition(write, move, next_state)
             self._function[state] = next_read_map
 
