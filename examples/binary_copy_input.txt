@@ -5,6 +5,3 @@
 
 # Start index
 1
-
-# (Optional) Character to be displayed as blank
-b

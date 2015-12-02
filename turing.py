@@ -181,18 +181,17 @@ def tape_from_file(filename: str, delim=DEFAULT_TAPE_DELIMITER):
                                lines_list)
     cured_lines = deque(map(lambda line: line.strip(' \n\r\t{}[]<>' + delim),
                             informative_lines))
-    blank = None
-    if len(cured_lines) == 3:
-        blank = cured_lines.pop()
-    elif len(cured_lines) != 2:
+    start_index = 0
+    if len(cured_lines) == 2:
+        start_index = int(cured_lines.pop())
+    elif len(cured_lines) != 1:
         raise InvalidTapeFromFileException('A single line of tape and starting '
                                            'index was expected')
     input_tape_str = cured_lines.popleft()
-    start_index = int(cured_lines.popleft())
     input_items = map(lambda s: s.strip(' \n\r\t{}[]<>'),
                       input_tape_str.split(delim))
     input_tape = list(input_items)
-    return Tape(input_tape, start_index, blank)
+    return Tape(input_tape, start_index)
 
 
 class InvalidTapeFromFileException(Exception):
@@ -264,8 +263,9 @@ class TuringMachine:
             raise InvalidTuringMachineDefinitionException()
 
     def compute(self, input_tape,
+                max_iter=DEFAULT_MAX_ITER,
                 print_results: bool=False,
-                max_iter=DEFAULT_MAX_ITER):
+                display_blank_as_empty=True):
         """Computes the input in accordance with the Turing Machine properties
 
         :param max_iter: the maximum number of iterations to allow
@@ -274,6 +274,8 @@ class TuringMachine:
         elements that are either blank or are in the input alphabet
         :param print_results: if true, prints out a string representation of
         the tape for each step
+        :param display_blank_as_empty: if True, outputs blank characters as an
+        empty space, if False, prints the string representation of the blanks
         :return: the tape as it is after being operated on
         """
         if isinstance(input_tape, Tape):
@@ -284,6 +286,8 @@ class TuringMachine:
             raise InvalidInputTapeException('Tape input should either be a '
                                             'Tape or a filename from which to'
                                             'generate a Tape')
+        if print_results and display_blank_as_empty:
+            current_tape._blank = self._blank
         current_state = self._state0
 
         # Accumulators

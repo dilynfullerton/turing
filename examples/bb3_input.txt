@@ -5,6 +5,3 @@
 
 # Start index
 3
-
-# (Optional) Character to be displayed as blank
-0
