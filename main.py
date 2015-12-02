@@ -52,17 +52,17 @@ def main():
     copy_machine9000 = turing_machine_from_file('examples/binary_copy.txt')
     copy_machine9000.compute(
         input_tape='examples/binary_copy_input.txt',
-        print_results=False)
+        print_results=True)
 
     negator = turing_machine_from_file('examples/negator.txt')
     negator.compute(
         input_tape='examples/negator_input0.txt',
-        print_results=True
+        print_results=False
     )
     negator.compute(
         input_tape='examples/negator_input1.txt',
         print_results=False,
-        max_iter=100
+        max_iter=20
     )
 
     nand = turing_machine_from_file('examples/nand.txt')
