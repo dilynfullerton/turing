@@ -1,0 +1,33 @@
+# Build your Turing Machine according to this template
+# Feel free to add descriptive comments by using '#' at the beginning of a line
+
+# States
+{S0, S1, S2, H}
+
+# Initial state
+S0
+
+# Final states
+{H}
+
+# Alphabet
+{b, 0, 1}
+
+# Blank
+b
+
+# Input alphabet
+{0, 1}
+
+# Transition function
+<S0, b, b, L, S1>
+<S0, 0, b, L, S0>
+<S0, 1, b, L, S0>
+
+<S1, b, b, R, S2>
+<S1, 0, b, R, S1>
+<S1, 1, b, R, S1>
+
+<S2, b, b, left, H>
+<S2, 0, b, RIGHT, H>
+<S2, 1, b, r, H>

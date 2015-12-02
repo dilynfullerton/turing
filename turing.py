@@ -104,38 +104,43 @@ class MoveDirection(Enum):
 
 
 class Tape:
-    def __init__(self, blank, initial_tape: list, start_index: int=0,
+    def __init__(self, initial_tape: list, start_index: int=0, blank=None,
                  tape_delim: str=DEFAULT_TAPE_DELIMITER,
                  current_index_color: str=DEFAULT_CURRENT_INDEX_COLOR,
                  end_color: str=END_COLOR):
         """Creates a tape object for use with a Turing Machine
 
-        :param blank: the item to be interpreted as a blank
         :param initial_tape: a list representing the input tape
         :param start_index: the index of the tape on which to start the Turing
         Machine; must be a valid index given the length of the list
+        :param blank: the item to be interpreted as a blank and outputted as an
+        empty space; this parameter is not necessary and not providing it will
+        simply result in the blank being outputted just as it is provided (i.e.
+        if blank is 'b', then 'b' would be outputted instead of ' ')
         """
         self._tape = initial_tape
-        self._blank = blank
         self._index = start_index
 
+        self._blank = blank
         self._delim = tape_delim
         self._current_color = current_index_color
         self._end_color = end_color
 
-    def move(self, direction: MoveDirection):
+    def move(self, direction: MoveDirection, blank):
         """Moves the turing machine head one space in the given direction
 
         :param direction: the direction to move the head or the Turing Machine
+        :param blank: the character that will be initialized in added sections
+        when the Turing Machine head goes beyond the end of the tape list
         """
         if direction is MoveDirection.left:
             if self._index == 0:
-                self._tape.insert(0, self._blank)
+                self._tape.insert(0, blank)
             else:
                 self._index -= 1
         elif direction is MoveDirection.right:
             if self._index == len(self._tape) - 1:
-                self._tape.append(self._blank)
+                self._tape.append(blank)
             self._index += 1
 
     def read(self):
@@ -176,18 +181,18 @@ def tape_from_file(filename: str, delim=DEFAULT_TAPE_DELIMITER):
                                lines_list)
     cured_lines = deque(map(lambda line: line.strip(' \n\r\t{}[]<>' + delim),
                             informative_lines))
-    start_index = 0
+    blank = None
     if len(cured_lines) == 3:
-        start_index = int(cured_lines.pop())
+        blank = cured_lines.pop()
     elif len(cured_lines) != 2:
-        raise InvalidTapeFromFileException('A blank value and a single line of'
-                                           ' tape was expected')
-    blank = cured_lines.popleft()
+        raise InvalidTapeFromFileException('A single line of tape and starting '
+                                           'index was expected')
     input_tape_str = cured_lines.popleft()
+    start_index = int(cured_lines.popleft())
     input_items = map(lambda s: s.strip(' \n\r\t{}[]<>'),
                       input_tape_str.split(delim))
     input_tape = list(input_items)
-    return Tape(blank, input_tape, start_index)
+    return Tape(input_tape, start_index, blank)
 
 
 class InvalidTapeFromFileException(Exception):
@@ -305,7 +310,7 @@ class TuringMachine:
 
             # Turing Machine operations
             current_tape.write(transition.write)
-            current_tape.move(transition.move)
+            current_tape.move(transition.move, self._blank)
             current_state = transition.next_state
 
             # Update accumulators

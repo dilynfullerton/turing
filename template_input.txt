@@ -1,7 +1,7 @@
-# Input for the NAND operator
+# Your input should follow the following template
 
 # Input tape
-[|1|1|]
+[|0|1|0|0|1|b|1|0|0|]
 
 # Start index
 0

@@ -1,9 +1,10 @@
 # Add 2 to 2
 
-# Blank
-B
-
 # Tape
 [| 1 | 1 | B | 1 | 1 |]
 
-# Optional starting index (default is 0)
+# Starting index
+0
+
+# (Optional) Character to be displayed as blank
+B

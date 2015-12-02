@@ -1,10 +1,10 @@
 # Full copy input
 
-# Blank
-b
-
 # Input tape
 [|b|1|0|0|1|1|b|b|b|b|b|b|]
 
-# Optional starting index (default is 0)
+# Start index
 1
+
+# (Optional) Character to be displayed as blank
+b
