@@ -1,22 +1,22 @@
 # Negator: Goes into an infinite loop if given 1, terminates with a 1 if given 0
 
 # States
-{0, 1, :), :(}
+{ 0, 1, :), :( }
 
 # Initial state
 0
 
 # Final states
-{:), :(}
+{ :), :( }
 
 # Alphabet
-{0, 1, b}
+{ 0, 1, b }
 
 # Blank
 b
 
 # Input alphabet
-{0, 1}
+{ 0, 1 }
 
 # Transition function
 < 0, 0, 1, R, :) >
