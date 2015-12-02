@@ -68,7 +68,7 @@ b
 < c1, 1., 1., r, :( >
 < c1, ., 1, r, 4 >
 
-# State 4: Mark current blank for later copy then go back and switch mark forward
+# State 4: Mark current blank for copy then go back and switch mark forward
 < 4, 0, 0, r, :( >
 < 4, 1, 1, r, :( >
 < 4, b, ., l, 5 >
