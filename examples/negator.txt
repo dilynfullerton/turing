@@ -1,13 +1,13 @@
 # Negator: Goes into an infinite loop if given 1, terminates with a 1 if given 0
 
 # States
-{0, 1, H, R}
+{0, 1, :), :(}
 
 # Initial state
 0
 
 # Final states
-{H, R}
+{:), :(}
 
 # Alphabet
 {0, 1, b}
@@ -19,10 +19,10 @@ b
 {0, 1}
 
 # Transition function
-<0, 0, 1, r, H>
-<0, 1, 1, r, 1>
-<0, b, b, r, R>
+< 0, 0, 1, R, :) >
+< 0, 1, 1, R,  1 >
+< 0, b, b, R, :( >
 
-<1, 0, 0, l, 0>
-<1, 1, 1, l, 0>
-<1, b, b, l, 0>
+< 1, 0, 0, L, 0 >
+< 1, 1, 1, L, 0 >
+< 1, b, b, L, 0 >

@@ -326,6 +326,7 @@ class TuringMachine:
         all_transitions.append(None)
 
         if print_results:
+            print()
             for step, state, tape, transition in zip(range(num_iter + 1),
                                                      all_states,
                                                      all_tapes,
