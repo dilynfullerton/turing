@@ -1,0 +1,7 @@
+# Collatz input
+
+# Tape
+[|1|1|]
+
+# Index
+0

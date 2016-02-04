@@ -5,7 +5,7 @@ from enum import Enum
 
 DEFAULT_FILE_INPUT_DELIMITER = ','
 DEFAULT_TAPE_DELIMITER = '|'
-DEFAULT_MAX_ITER = 10000
+DEFAULT_MAX_ITER = None
 DEFAULT_CURRENT_INDEX_COLOR = '\033[93m'
 END_COLOR = '\033[0m'
 
@@ -299,7 +299,7 @@ class TuringMachine:
         all_transitions = list()
 
         while True:
-            if num_iter >= max_iter:
+            if max_iter is not None and num_iter >= max_iter:
                 break
 
             if current_state in self._final_states:
