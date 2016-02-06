@@ -1,0 +1,7 @@
+# Factorial input 1
+
+# Tape
+[|1|1|1|]
+
+# Index
+0

@@ -73,10 +73,15 @@ def main():
 
     collatz = turing_machine_from_file('examples/collatz.txt')
     ans = collatz.compute(
-        input_tape='examples/collatz_input_27.txt',
-        print_results=False
+        input_tape='examples/collatz_input_7.txt',
+        print_results=True
     )
-    print(ans)
+
+    # factorial = turing_machine_from_file('examples/factorial.txt')
+    # factorial.compute(
+    #     input_tape='examples/factorial_input_5.txt',
+    #     print_results=True
+    # )
 
 
 main()

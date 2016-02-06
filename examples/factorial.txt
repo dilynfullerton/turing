@@ -1,0 +1,116 @@
+# Perform a factorial on numbers 1 or larger
+
+# States
+{I0, I1, I2, C0, C1, C2, C3, D0, D1, D2, D3, D4, d0, d1, d2, d3, H0, (:, ):}
+
+# Initial state
+I0
+
+# Final states
+{(:, ):}
+
+# Alphabet
+{., 1, B, _}
+
+# Blank
+B
+
+# Input alphabet
+{1}
+
+# Transition function
+
+## Subprocess I: Check if 1, or 2; halt if so
+### State I0: Continue if 1, fail if blank
+<I0, ., 1, r, ):>
+<I0, 1, 1, r, I1>
+<I0, B, B, r, ):>
+<I0, _, _, r, ):>
+### State I1: Halt if blank, continue if 1, fail if .
+<I1, ., ., r, ):>
+<I1, 1, 1, r, I2>
+<I1, B, B, l, (:>
+<I1, _, _, r, ):>
+### State I2: Halt if blank, begin counting if 1
+<I2, ., ., r, ):>
+<I2, 1, ., l, C0>
+<I2, B, B, l, H0>
+<I2, _, _, r, ):>
+
+## Subprocess C: Count the number of ones (after two) incrementing on left
+### State C0: Character marked with '.', go left
+<C0, ., ., r, ):>
+<C0, 1, 1, l, C0>
+<C0, B, B, l, C1>
+<C0, _, _, r, ):>
+### State C1: Increment left counter
+<C1, ., ., r, ):>
+<C1, 1, 1, l, C1>
+<C1, B, 1, r, C2>
+<C1, _, _, r, ):>
+### State C2: Move marked character left
+<C2, ., 1, r, C3>
+<C2, 1, 1, r, C2>
+<C2, B, B, r, C2>
+<C2, _, _, r, ):>
+### State C3: Mark character
+<C3, ., ., r, ):>
+<C3, 1, ., l, C0>
+<C3, B, B, l, D0>
+<C3, _, _, r, ):>
+
+## Subprocess D: Duplicate the string of ones the number of times given by the counter on the left
+### State D0: Go to beginning
+<D0, ., ., r, ):>
+<D0, 1, 1, l, D0>
+<D0, B, B, l, D1>
+<D0, _, _, l, D0>
+### State D1: Add a mark on the left of the counter
+<D1, ., ., l, D1>
+<D1, 1, ., r, d0>
+<D1, B, B, r, D2>
+<D1, _, _, r, ):>
+## State D2: Remove the current character
+<D2, ., B, r, D3>
+<D2, 1, 1, r, ):>
+<D2, B, B, r, (:>
+<D2, _, _, r, ):>
+## State D3: Un-mark counter
+<D3, ., 1, r, D3>
+<D3, 1, 1, r, ):>
+<D3, B, B, r, D4>
+<D3, _, _, r, ):>
+## State D4: Replace _ with 1
+<D4, ., ., r, ):>
+<D4, 1, 1, r, D4>
+<D4, B, B, l, D0>
+<D4, _, 1, r, D4>
+
+## Subprocess d: Make a copy of the ones to the right using spacer _
+## State d0: Go to beginning
+<d0, ., ., r, d0>
+<d0, 1, 1, r, ):>
+<d0, B, B, r, d1>
+<d0, _, _, r, ):>
+## State d1: Mark character for copying
+<d1, ., ., r, ):>
+<d1, 1, ., r, d2>
+<d1, B, B, r, ):>
+<d1, _, _, r, D0>
+## State d2: Print a _ at the end
+<d2, ., ., r, ):>
+<d2, 1, 1, r, d2>
+<d2, B, _, l, d3>
+<d2, _, _, r, d2>
+## State d3: Go to marked character, move right
+<d3, ., 1, r, d1>
+<d3, 1, 1, l, d3>
+<d3, B, B, r, ):>
+<d3, _, _, l, d3>
+
+## Subprocess H: Halt
+### H0: Go back to beginning and halt, fail if .
+<H0, ., ., l, ):>
+<H0, 1, 1, l, H0>
+<H0, B, B, r, (:>
+<H0, _, _, r, ):>
