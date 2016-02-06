@@ -1,0 +1,249 @@
+# Determine whether a given whole number is a prime number
+
+# States
+{I0, I1, Ip, I2, IP, E0, E1, Ee, Eo, E2, D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, C0, C1, C2, C3, c0, c1, P0, P1, P2, P3, P4, p0, p1, p2, p3, p4, (:, ):}
+
+# Initial state
+I0
+
+# Final states
+{(:, ):}
+
+# Alphabet
+{0, 1, B, ., *}
+
+# Blank
+B
+
+# Input alphabet
+{1}
+
+# Transition function
+
+## Subprocess I: Halt if 1 or two
+### State I0: Halt if bad input, continue if 1
+<I0, 0, 0, R, ):>
+<I0, 1, 1, R, I1>
+<I0, B, B, R, ):>
+<I0, ., ., R, ):>
+<I0, *, *, R, ):>
+### State I1: Halt with 0 if blank
+<I1, 0, 0, R, ):>
+<I1, 1, 1, R, I2>
+<I1, B, B, L, Ip>
+<I1, ., ., R, ):>
+<I1, *, *, R, ):>
+### State Ip: Go LEFT Back to beginning
+<Ip, 0, 0, R, ):>
+<Ip, 1, 1, L, Ip>
+<Ip, B, B, L, p0>
+<Ip, ., ., R, ):>
+<Ip, *, *, R, ):>
+### State I2: Halt with 1 if blank
+<I2, 0, 0, R, ):>
+<I2, 1, 1, L, E0>
+<I2, B, B, L, IP>
+<I2, ., ., R, ):>
+<I2, *, *, R, ):>
+## State IP: Go LEFT Back to beginning
+<IP, 0, 0, R, ):>
+<IP, 1, 1, L, IP>
+<IP, B, B, L, P0>
+<IP, ., ., R, ):>
+<IP, *, *, R, ):>
+
+## Subprocess E: Extend current number try
+### State E0: Go LEFT to beginning
+<E0, 0, 0, R, ):>
+<E0, 1, 1, L, E0>
+<E0, B, B, L, E1>
+<E0, ., ., R, ):>
+<E0, *, *, R, ):>
+### State E1: If blank, put 2; if 2, add 1; else, add 2
+<E1, 0, 0, R, ):>
+<E1, 1, 1, L, Eo>
+<E1, B, 1, L, E2>
+<E1, ., ., R, ):>
+<E1, *, *, R, ):>
+### State Eo: Odd; adds 2 when reaches blank
+<Eo, 0, 0, R, ):>
+<Eo, 1, 1, L, Ee>
+<Eo, B, 1, L, E2>
+<Eo, ., ., R, ):>
+<Eo, *, *, R, ):>
+### State Ee: Even; adds 1 when reaches blank
+<Ee, 0, 0, R, ):>
+<Ee, 1, 1, L, Eo>
+<Ee, B, 1, R, D0>
+<Ee, ., ., R, ):>
+<Ee, *, *, R, ):>
+### State E2: Add a one and turn around
+<E2, 0, 0, R, ):>
+<E2, 1, 1, R, ):>
+<E2, B, 1, R, D0>
+<E2, ., ., R, ):>
+<E2, *, *, R, ):>
+
+## Subprocess D: See if number divides by current number try
+### State D0: Go RIGHT to the separating blank
+<D0, 0, 0, R, ):>
+<D0, 1, 1, R, D0>
+<D0, B, B, L, D1>
+<D0, ., ., R, ):>
+<D0, *, *, R, ):>
+### State D1: Mark position in number try
+<D1, 0, 0, R, ):>
+<D1, 1, ., R, D2>
+<D1, B, B, R, D5>
+<D1, ., ., L, D1>
+<D1, *, *, R, ):>
+### State D2: Go RIGHT to the separating blank
+<D2, 0, 0, R, ):>
+<D2, 1, 1, R, ):>
+<D2, B, B, R, D3>
+<D2, ., ., R, D2>
+<D2, *, *, R, D2>
+### State D3: Mark current position in number
+<D3, 0, 0, R, ):>
+<D3, 1, ., L, D4>
+<D3, B, B, L, C0>
+<D3, ., ., R, D3>
+<D3, *, *, R, D3>
+### State D4: Go LEFT to separating blank
+<D4, 0, 0, R, ):>
+<D4, 1, 1, R, ):>
+<D4, B, B, L, D1>
+<D4, ., ., L, D4>
+<D4, *, *, L, D4>
+### State D5: Remove marks on number try
+<D5, 0, 0, R, ):>
+<D5, 1, 1, R, ):>
+<D5, B, B, R, D6>
+<D5, ., 1, R, D5>
+<D5, *, *, R, ):>
+### State D6: If first number is not marked start over, else go to last mark
+<D6, 0, 0, R, ):>
+<D6, 1, 1, L, D6>
+<D6, B, B, R, D3>
+<D6, ., ., R, D7>
+<D6, *, *, R, ):>
+### State D7: Go to the last mark in number
+<D7, 0, 0, R, ):>
+<D7, 1, 1, L, D8>
+<D7, B, B, L, c0>
+<D7, ., ., R, D7>
+<D7, *, *, R, D7>
+### State D8: Mark number with *
+<D8, 0, 0, R, ):>
+<D8, 1, 1, R, ):>
+<D8, B, B, R, ):>
+<D8, ., *, L, D9>
+<D8, *, *, R, ):>
+### State D9: Go LEFT to separating blank and begin marking try again
+<D9, 0, 0, R, ):>
+<D9, 1, 1, R, ):>
+<D9, B, B, L, D1>
+<D9, ., ., L, D9>
+<D9, *, *, L, D9>
+
+## Subprocess C: Convert number back to ones
+### C0: Convert to ones (while looking for a star)
+<C0, 0, 0, R, ):>
+<C0, 1, 1, R, ):>
+<C0, B, B, L, P0>
+<C0, ., 1, L, C0>
+<C0, *, 1, L, C1>
+### C1: Convert to ones (and continue search)
+<C1, 0, 0, R, ):>
+<C1, 1, 1, R, ):>
+<C1, B, B, L, C2>
+<C1, ., 1, L, C1>
+<C1, *, 1, L, C1>
+### C2: Convert number try markers to ones
+<C2, 0, 0, R, ):>
+<C2, 1, 1, L, C2>
+<C2, B, B, R, C3>
+<C2, ., 1, L, C2>
+<C2, *, 1, L, C2>
+### C3: Go RIGHT to beginning
+<C3, 0, 0, R, ):>
+<C3, 1, 1, R, C3>
+<C3, B, B, L, E1>
+<C3, ., ., R, ):>
+<C3, *, *, R, ):>
+### c0: Convert to ones (and halt with 1 if no star is found)
+<c0, 0, 0, R, ):>
+<c0, 1, 1, R, ):>
+<c0, B, B, L, P0>
+<c0, ., 1, L, c0>
+<c0, *, 1, L, c1>
+### c1: Convert to ones and halt with 0
+<c1, 0, 0, R, ):>
+<c1, 1, 1, R, ):>
+<c1, B, B, L, p0>
+<c1, ., 1, L, c1>
+<c1, *, 1, L, c1>
+
+## Subprocess P: Remove number try and print 1
+### State P0: Remove number try
+<P0, 0, 0, R, ):>
+<P0, 1, B, L, P0>
+<P0, B, B, R, P1>
+<P0, ., B, L, P0>
+<P0, *, *, R, ):>
+### State P1: Go back to beginning
+<P1, 0, 0, R, ):>
+<P1, 1, 1, L, P2>
+<P1, B, B, R, P1>
+<P1, ., ., R, ):>
+<P1, *, *, R, ):>
+### State P2: Move to print position
+<P2, 0, 0, R, ):>
+<P2, 1, 1, R, ):>
+<P2, B, B, L, P3>
+<P2, ., ., R, ):>
+<P2, *, *, R, ):>
+### State P3: Print 1
+<P3, 0, 0, R, ):>
+<P3, 1, 1, R, ):>
+<P3, B, 1, L, P4>
+<P3, ., ., R, ):>
+<P3, *, *, R, ):>
+### State P4: Halt
+<P4, 0, 0, R, ):>
+<P4, 1, 1, R, ):>
+<P4, B, B, R, (:>
+<P4, ., ., R, ):>
+<P4, *, *, R, ):>
+
+## Subprocess p: Remove number try and print 0
+### State p0: Remove number try
+<p0, 0, 0, R, ):>
+<p0, 1, B, L, p0>
+<p0, B, B, R, p1>
+<p0, ., B, L, p0>
+<p0, *, *, R, ):>
+### State P1: Go back to beginning
+<p1, 0, 0, R, ):>
+<p1, 1, 1, L, p2>
+<p1, B, B, R, p1>
+<p1, ., ., R, ):>
+<p1, *, *, R, ):>
+### State p2: Move to print position
+<p2, 0, 0, R, ):>
+<p2, 1, 1, R, ):>
+<p2, B, B, L, p3>
+<p2, ., ., R, ):>
+<p2, *, *, R, ):>
+### State P3: Print 0
+<p3, 0, 0, R, ):>
+<p3, 1, 1, R, ):>
+<p3, B, 0, L, p4>
+<p3, ., ., R, ):>
+<p3, *, *, R, ):>
+### State p4: Halt
+<p4, 0, 0, R, ):>
+<p4, 1, 1, R, ):>
+<p4, B, B, R, (:>
+<p4, ., ., R, ):>
+<p4, *, *, R, ):>

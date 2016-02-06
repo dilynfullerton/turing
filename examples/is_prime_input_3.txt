@@ -1,0 +1,7 @@
+# is_prime input 3 => 1 (Is prime)
+
+# Tape
+[|1|1|1|]
+
+# Index
+0
