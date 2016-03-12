@@ -72,23 +72,23 @@ def main():
     #     print_results=False
     # )
 
-    # collatz = turing_machine_from_file('examples/collatz.txt')
-    # ans = collatz.compute(
-    #     input_tape='examples/collatz_input_7.txt',
-    #     print_results=True
-    # )
+    collatz = turing_machine_from_file('examples/collatz.txt')
+    ans = collatz.compute(
+        input_tape=Tape(['1']*3),
+        print_results=True
+    )
 
     # factorial = turing_machine_from_file('examples/factorial.txt')
     # factorial.compute(
-    #     input_tape='examples/factorial_input_4.txt',
+    #     input_tape=Tape(['1']*4),
     #     print_results=True
     # )
 
-    is_prime = turing_machine_from_file('examples/is_prime.txt')
-    is_prime.compute(
-        input_tape=Tape(['1']*35),
-        print_results=True
-    )
+    # is_prime = turing_machine_from_file('examples/is_prime.txt')
+    # is_prime.compute(
+    #     input_tape=Tape(['1']*77),
+    #     print_results=True
+    # )
 
 
 main()
