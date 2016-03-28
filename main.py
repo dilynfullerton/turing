@@ -72,11 +72,11 @@ def main():
     #     print_results=False
     # )
 
-    collatz = turing_machine_from_file('examples/collatz.txt')
-    ans = collatz.compute(
-        input_tape=Tape(['1']*3),
-        print_results=True
-    )
+    # collatz = turing_machine_from_file('examples/collatz.txt')
+    # ans = collatz.compute(
+    #     input_tape=Tape(['1']*3),
+    #     print_results=True
+    # )
 
     # factorial = turing_machine_from_file('examples/factorial.txt')
     # factorial.compute(
@@ -86,9 +86,16 @@ def main():
 
     # is_prime = turing_machine_from_file('examples/is_prime.txt')
     # is_prime.compute(
-    #     input_tape=Tape(['1']*77),
+    #     input_tape=Tape(['1']*11),
     #     print_results=True
     # )
+
+    quicksort = turing_machine_from_file('examples/quicksort.txt')
+    quicksort.compute(
+        input_tape='examples/quicksort_input.txt',
+        print_results=True,
+        max_iter=15000,
+    )
 
 
 main()

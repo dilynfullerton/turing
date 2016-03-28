@@ -81,7 +81,15 @@ class TransitionFunction:
         :param current_read: the value at the current location of the head
         :return: the 3-tuple associated with the next transition
         """
-        return self._function[current_state][current_read]
+        try:
+            return self._function[current_state][current_read]
+        except KeyError:
+            raise InvalidTuringMachineDefinitionException(
+                '\nTransition function is incomplete: ' +
+                'No transition available for state {} with read {}.'.format(
+                    current_state, current_read
+                )
+            )
 
 
 class InvalidTransitionsMapException(Exception):
@@ -261,8 +269,8 @@ class TuringMachine:
         self._input_alphabet = frozenset(input_alphabet)
         self._blank = blank
         self._tf = transition_function
-        if not self._is_consistent_turing_machine_definition():
-            raise InvalidTuringMachineDefinitionException()
+
+        self._is_consistent_turing_machine_definition()
 
     def compute(self, input_tape,
                 max_iter=DEFAULT_MAX_ITER,
@@ -329,15 +337,18 @@ class TuringMachine:
 
         if print_results:
             print()
+            w_step = len(str(num_iter))
+            w_state = max(map(lambda s: len(str(s)), all_states))
+            w_tape = max(map(lambda t: len(str(t)), all_tapes))
             for step, state, tape, transition in zip(range(num_iter + 1),
                                                      all_states,
                                                      all_tapes,
                                                      all_transitions):
-                print('Step={i:5}; '
-                      'State={s:5}; '
-                      'Tape={t}; '
-                      'Transition={n};;'.format(i=step, s=state, t=tape,
-                                                n=transition))
+                print(('Step= {i:' + str(w_step) + '} \t' +
+                       'State= {s:' + str(w_state) + '} \t' +
+                       'Tape= {t:' + str(w_tape) + '} \t' +
+                       'Transition= {n}').format(i=step, s=state, t=tape,
+                                                 n=transition))
 
         return current_tape
 
@@ -349,15 +360,25 @@ class TuringMachine:
         False otherwise
         """
         if self._state0 not in self._states:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                'Initial state {} not in allowed states.'.format(self._state0)
+            )
         if not self._final_states.issubset(self._states):
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                'Final states set is not a subset of allowed states.'
+            )
         if self._blank not in self._alphabet:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                'Blank character {} not in alphabet.'.format(self._blank)
+            )
         if not self._input_alphabet.issubset(self._alphabet):
-            return False
-        if not self._is_valid_transition_function():
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                'Input alphabet is not a subset of alphabet.'
+            )
+        try:
+            self._is_valid_transition_function()
+        except InvalidTuringMachineDefinitionException:
+            raise
         return True
 
     def _is_valid_transition_function(self):
@@ -377,8 +398,10 @@ class TuringMachine:
         for state in self._states - self._final_states:
             for value in self._alphabet:
                 trans = self._tf.transition(state, value)
-                if not self._is_valid_transition_tuple(state, value, trans):
-                    return False
+                try:
+                    self._is_valid_transition_tuple(state, value, trans)
+                except InvalidTuringMachineDefinitionException:
+                    raise
             else:
                 continue
         else:
@@ -386,15 +409,40 @@ class TuringMachine:
 
     def _is_valid_transition_tuple(self, state, value, t: Transition):
         if state not in self._states - self._final_states:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                '\nInvalid transition tuple for state {} reading {}:'.format(
+                    state, value
+                ) +
+                'State {} is not in states - final states.'.format(state)
+            )
         if value not in self._alphabet:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                '\nInvalid transition tuple for state {} reading {}:'.format(
+                    state, value
+                ) +
+                'Key {} is not in alphabet.'.format(value)
+            )
         if t.write not in self._alphabet:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                '\nInvalid transition tuple for state {} reading {}:'.format(
+                    state, value
+                ) +
+                'Write value {} is not in alphabet.'.format(t.write)
+            )
         if t.move not in MoveDirection:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                '\nInvalid transition tuple for state {} reading {}:'.format(
+                    state, value
+                ) +
+                '{} is not a valid move direction.'.format(t.move)
+            )
         if t.next_state not in self._states:
-            return False
+            raise InvalidTuringMachineDefinitionException(
+                '\nInvalid transition tuple for state {} reading {}:'.format(
+                    state, value
+                ) +
+                'Next state {} not in states.'.format(t.next_state)
+            )
         return True
 
 

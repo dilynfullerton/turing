@@ -1,0 +1,989 @@
+# Apply the quicksort algorithm
+
+# States
+{(:, ):, I0, I1, I2, I3, I4, I5, F0, F1, F2, M0, M1, M2, M3, m0, S^, S1, S;, SB, S$, S+, P0, P1, P2, P3, P4, p0, Q0, Q1, Q2, Q3, Q5, Q8, Q4, Q7, Q6, Q9, q0, q1, T0, T1, T2, T3, T4, C0, C1, C2, C3, C4, C5, c^, c1, c;, H0, H1, H2, H3, H4, H5, H6, H7, H8, H9, hh}
+
+# Initial state
+I0
+
+# Final states
+{(:, ):}
+
+# Alphabet
+{~, ^, B, 1, ;, $, +, ^., *, 1., ;., $.}
+
+# Blank
+B
+
+# Input alphabet
+{1}
+
+# Transition function
+
+## Subprocess I: Bound the input
+
+### I0: Assuming starting on first value, place local boundary symbol (^)
+###       on the left
+<I0, B, ^, L, I1>
+<I0, 1, 1, L, I0>
+### Bad values
+<I0, ~, ~, R, ):>
+<I0, ^, ^, R, ):>
+<I0, ;, ;, R, ):>
+<I0, $, $, R, ):>
+<I0, +, +, R, ):>
+<I0, ^., ^., R, ):>
+<I0, *, *, R, ):>
+<I0, 1., 1., R, ):>
+<I0, ;., ;., R, ):>
+<I0, $., $., R, ):>
+
+### I1: Place a global boundary symbol (~) on the far left, move to first number
+<I1, ^, ^, R, I2>
+<I1, B, ~, R, I1>
+### Bad values
+<I1, ~, ~, R, ):>
+<I1, 1, 1, R, ):>
+<I1, ;, ;, R, ):>
+<I1, $, $, R, ):>
+<I1, +, +, R, ):>
+<I1, ^., ^., R, ):>
+<I1, *, *, R, ):>
+<I1, 1., 1., R, ):>
+<I1, ;., ;., R, ):>
+<I1, $., $., R, ):>
+
+### I2: Move to far right to place a global boundary symbol (+)
+<I2, B, B, R, I3>
+<I2, 1, 1, R, I2>
+### Bad values
+<I2, ~, ~, R, ):>
+<I2, ^, ^, R, ):>
+<I2, ;, ;, R, ):>
+<I2, $, $, R, ):>
+<I2, +, +, R, ):>
+<I2, ^., ^., R, ):>
+<I2, *, *, R, ):>
+<I2, 1., 1., R, ):>
+<I2, ;., ;., R, ):>
+<I2, $., $., R, ):>
+
+### I3: If blank, at far right. Places boundary symbol ($). Else if 1,
+###       continue moving right.
+<I3, B, $, R, I4>
+<I3, 1, 1, R, I2>
+### Bad values
+<I3, ~, ~, R, ):>
+<I3, ^, ^, R, ):>
+<I3, ;, ;, R, ):>
+<I3, $, $, R, ):>
+<I3, +, +, R, ):>
+<I3, ^., ^., R, ):>
+<I3, *, *, R, ):>
+<I3, 1., 1., R, ):>
+<I3, ;., ;., R, ):>
+<I3, $., $., R, ):>
+
+### I4: Place local right boundary symbol ($)
+<I4, B, +, L, I5>
+### Bad values
+<I4, ~, ~, R, ):>
+<I4, ^, ^, R, ):>
+<I4, 1, 1, R, ):>
+<I4, ;, ;, R, ):>
+<I4, $, $, R, ):>
+<I4, +, +, R, ):>
+<I4, ^., ^., R, ):>
+<I4, *, *, R, ):>
+<I4, 1., 1., R, ):>
+<I4, ;., ;., R, ):>
+<I4, $., $., R, ):>
+
+### I5: Move left to very beginning, filling in blanks with (;)
+<I5, ~, ~, R, F1>
+<I5, ^, ^, L, I5>
+<I5, B, ;, L, I5>
+<I5, 1, 1, L, I5>
+<I5, $, $, L, I5>
+### Bad values
+<I5, ;, ;, R, ):>
+<I5, +, +, R, ):>
+<I5, 1., 1., R, ):>
+<I5, ^., ^., R, ):>
+<I5, *, *, R, ):>
+<I5, ;., ;., R, ):>
+<I5, $., $., R, ):>
+
+## Subprocess F: Finds the first set to be sorted
+
+### F0: Go to very beginning
+<F0, ~, ~, R, F1>
+<F0, ^, ^, L, F0>
+<F0, B, B, L, F0>
+<F0, 1, 1, L, F0>
+<F0, ;, ;, L, F0>
+<F0, $, $, L, F0>
+<F0, +, +, L, F0>
+### Bad values
+<F0, 1., 1., R, ):>
+<F0, ^., ^., R, ):>
+<F0, *, *, R, ):>
+<F0, ;., ;., R, ):>
+<F0, $., $., R, ):>
+
+### F1: Find first set to be sorted
+<F1, ^, ^., R, m0>
+<F1, B, B, L, F1>
+<F1, 1, 1, L, F1>
+<F1, ;, ;, L, F1>
+<F1, $, $, L, F1>
+### Bad values
+<F1, ~, ~, R, ):>
+<F1, ^., ^., R, ):>
+<F1, +, +, L, ):>
+<F1, *, *, R, ):>
+<F1, 1., 1., R, ):>
+<F1, ;., ;., R, ):>
+<F1, $., $., R, ):>
+
+### F2: Move into subprocess M
+<F2, ~, ~, R, F2>
+<F2, ^, ^, L, M0>
+<F2, B, B, R, F2>
+<F2, 1, 1, R, F2>
+### Bad values
+<F2, ;, ;, R, ):>
+<F2, $, $, R, ):>
+<F2, +, +, L, ):>
+<F2, ^., ^., R, ):>
+<F2, *, *, R, ):>
+<F2, 1., 1., R, ):>
+<F2, ;., ;., R, ):>
+<F2, $., $., R, ):>
+
+
+## Subprocess M: Makes room for the current set
+
+### M0: Mark the current character and go to end to make space
+<M0, ~, ~, R, M0>
+<M0, ^, ^., R, m0>
+<M0, B, B, R, M0>
+<M0, 1, 1., R, M1>
+<M0, ;, ;., R, M1>
+<M0, $, $., R, M2>
+<M0, *, *, R, M2>
+### Bad values
+<M0, +, +, L, ):>
+<M0, ^., ^., R, ):>
+<M0, 1., 1., R, ):>
+<M0, ;., ;., R, ):>
+<M0, $., $., R, ):>
+
+### m0: check if empty set
+<m0, $, B, L, m0>
+<m0, ^., B, R, q1>
+<m0, 1, 1, R, M1>
+### Bad values
+<m0, ~, ~, R, ):>
+<m0, ^, ^, R, ):>
+<m0, B, B, R, ):>
+<m0, ;, ;, R, ):>
+<m0, +, +, R, ):>
+<m0, *, *, R, ):>
+<m0, 1., 1., R, ):>
+<m0, ;., ;., R, ):>
+<m0, $., $., R, ):>
+
+
+### M1: Go to the end to make space
+<M1, 1, 1, R, M1>
+<M1, ;, ;, R, M1>
+<M1, $, $, R, M2>
+### Bad values
+<M1, ~, ~, R, ):>
+<M1, ^, ^, R, ):>
+<M1, B, B, R, ):>
+<M1, +, +, L, ):>
+<M1, *, *, R, ):>
+<M1, ^., ^., R, ):>
+<M1, 1., 1., R, ):>
+<M1, ;., ;., R, ):>
+<M1, $., $., R, ):>
+
+### M2: Mark blank with (*) and shift characters
+<M2, ^, *, R, S^>
+<M2, B, *, R, SB>
+<M2, 1, *, R, S1>
+<M2, ;, *, R, S;>
+<M2, $, *, R, S$>
+<M2, +, *, R, S+>
+<M2, *, *, R, M2>
+### Bad values
+<M2, ~, ~, R, ):>
+<M2, 1., 1., R, ):>
+<M2, ^., ^., R, ):>
+<M2, ;., ;., R, ):>
+<M2, $., $., R, ):>
+
+### M3: Go back and move marked character forward
+<M3, ~, ~, R, P0>
+<M3, ^, ^, L, M3>
+<M3, B, B, L, M3>
+<M3, 1, 1, L, M3>
+<M3, ;, ;, L, M3>
+<M3, $, $, L, M3>
+<M3, *, *, L, M3>
+<M3, 1., 1, R, M0>
+<M3, ^., ^, R, M0>
+<M3, ;., ;, R, M0>
+<M3, $., $, R, M0>
+### Bad values
+<M3, +, +, R, ):>
+
+## Subprocess S: Shift characters right recursively
+
+### S^
+<S^, B, ^, R, M3>
+<S^, 1, ^, R, S1>
+<S^, $, ^, R, S$>
+### Bad values
+<S^, ~, ~, R, ):>
+<S^, ^, ^, R, ):>
+<S^, ;, ;, R, ):>
+<S^, +, +, R, ):>
+<S^, *, *, R, ):>
+<S^, ^., ^., R, ):>
+<S^, 1., 1., R, ):>
+<S^, ;., ;., R, ):>
+<S^, $., $., R, ):>
+
+### S1
+<S1, B, 1, R, SB>
+<S1, 1, 1, R, S1>
+<S1, ;, 1, R, S;>
+<S1, $, 1, R, S$>
+### Bad values
+<S1, ~, ~, R, ):>
+<S1, ^, ^, R, ):>
+<S1, +, +, R, ):>
+<S1, *, *, R, ):>
+<S1, ^., ^., R, ):>
+<S1, 1., 1., R, ):>
+<S1, ;., ;., R, ):>
+<S1, $., $., R, ):>
+
+### SB
+<SB, ^, B, R, S^>
+<SB, 1, B, R, S1>
+<SB, +, B, R, S+>
+<SB, B, B, L, M3>
+### Bad values
+<SB, ~, ~, R, ):>
+<SB, ;, ;, R, ):>
+<SB, $, $, R, ):>
+<SB, *, *, R, ):>
+<SB, ^., ^., R, ):>
+<SB, 1., 1., R, ):>
+<SB, ;., ;., R, ):>
+<SB, $., $., R, ):>
+
+### S;
+<S;, 1, ;, R, S1>
+<S;, $, ;, R, S$>
+### Bad values
+<S;, ~, ~, R, ):>
+<S;, ^, ^, R, ):>
+<S;, B, B, R, ):>
+<S;, ;, ;, R, ):>
+<S;, +, +, R, ):>
+<S;, *, *, R, ):>
+<S;, ^., ^., R, ):>
+<S;, 1., 1., R, ):>
+<S;, ;., ;., R, ):>
+<S;, $., $., R, ):>
+
+### S$
+<S$, B, $, R, SB>
+<S$, +, $, R, S+>
+### Bad values
+<S$, ~, ~, R, ):>
+<S$, ^, ^, R, ):>
+<S$, 1, 1, R, ):>
+<S$, ;, ;, R, ):>
+<S$, $, $, R, ):>
+<S$, *, *, R, ):>
+<S$, ^., ^., R, ):>
+<S$, 1., 1., R, ):>
+<S$, ;., ;., R, ):>
+<S$, $., $., R, ):>
+
+### S+
+<S+, B, +, L, M3>
+### Bad values
+<S+, ~, ~, R, ):>
+<S+, ^, ^, R, ):>
+<S+, 1, 1, R, ):>
+<S+, ;, ;, R, ):>
+<S+, $, $, R, ):>
+<S+, +, +, R, ):>
+<S+, *, *, R, ):>
+<S+, ^., ^., R, ):>
+<S+, 1., 1., R, ):>
+<S+, ;., ;., R, ):>
+<S+, $., $., R, ):>
+
+## Subprocess P: Move the pivot
+
+### P0: Mark the first 1 to copy
+<P0, ^, ^, L, p0>
+<P0, B, B, R, P0>
+<P0, 1, 1, R, P0>
+### Bad values
+<P0, ~, ~, R, ):>
+<P0, ;, ;, R, ):>
+<P0, $, $, R, ):>
+<P0, +, +, R, ):>
+<P0, *, *, R, ):>
+<P0, ^., ^., R, ):>
+<P0, 1., 1., R, ):>
+<P0, ;., ;., R, ):>
+<P0, $., $., R, ):>
+
+### p0: Mark the first 1 to copy
+<p0, ~, ~, R, p0>
+<p0, ^, ^, R, p0>
+<p0, B, B, R, p0>
+<p0, 1, 1., R, P1>
+<p0, ;, ^, L, P2>
+<p0, $, B, L, p0>
+<p0, 1., 1., R, p0>
+### Bad values
+<p0, +, +, R, ):>
+<p0, *, *, R, ):>
+<p0, ^., ^., R, ):>
+<p0, ;., ;., R, ):>
+<p0, $., $., R, ):>
+
+### P1: Go to the * symbols to place the pivot
+<P1, B, B, R, P4>
+<P1, 1, 1, R, P1>
+<P1, ;, ;, R, P1>
+<P1, $, $, R, P1>
+<P1, *, B, R, P3>
+### Bad values
+<P1, ~, ~, R, ):>
+<P1, ^, ^, R, ):>
+<P1, +, +, R, ):>
+<P1, ^., ^., R, ):>
+<P1, 1., 1., R, ):>
+<P1, ;., ;., R, ):>
+<P1, $., $., R, ):>
+
+### P2: Finished copying pivot, go back to start blanking out old values
+<P2, ^, B, R, Q0>
+<P2, 1., B, L, P2>
+### Bad values
+<P2, ~, ~, R, ):>
+<P2, B, B, R, ):>
+<P2, 1, 1, R, ):>
+<P2, ;, ;, R, ):>
+<P2, $, $, R, ):>
+<P2, +, +, R, ):>
+<P2, *, *, R, ):>
+<P2, ^., ^., R, ):>
+<P2, ;., ;., R, ):>
+<P2, $., $., R, ):>
+
+### P3: Write the pivot and go back
+<P3, *, 1, L, P3>
+<P3, B, B, L, P3>
+<P3, $, $, L, P3>
+<P3, 1, 1, L, P3>
+<P3, ;, ;, L, P3>
+<P3, 1., 1., R, p0>
+### Bad values
+<P3, +, +, R, ):>
+<P3, ^, ^, R, ):>
+<P3, ~, ~, R, ):>
+<P3, ^., ^., R, ):>
+<P3, ;., ;., R, ):>
+<P3, $., $., R, ):>
+
+### P4: Write subsequent pivot digits
+<P4, 1, 1, R, P4>
+<P4, *, 1, L, P3>
+### Bad values
+<P4, ~, 1, L, P3>
+<P4, ^, 1, L, P3>
+<P4, B, 1, L, P3>
+<P4, ;, 1, L, P3>
+<P4, $, 1, L, P3>
+<P4, +, 1, L, P3>
+<P4, ^., 1, L, P3>
+<P4, 1., 1, L, P3>
+<P4, ;., 1, L, P3>
+<P4, $., 1, L, P3>
+
+## Subprocess Q: Move elements greater than pivot to the other side of pivot
+
+### Q0: Go to the spot after the pivot to make a new set
+<Q0, ^, ^, R, q0>
+<Q0, B, B, R, Q0>
+<Q0, 1, 1, R, Q0>
+<Q0, ;, ;, R, Q0>
+<Q0, $, $, R, Q0>
+<Q0, *, B, R, Q1>
+### Bad values
+<Q0, +, +, R, ):>
+<Q0, ~, ~, R, ):>
+<Q0, ^., ^., R, ):>
+<Q0, 1., 1., R, ):>
+<Q0, ;., ;., R, ):>
+<Q0, $., $., R, ):>
+
+### q0: check if empty set
+<q0, $, B, L, q0>
+<q0, 1, 1, R, Q0>
+<q0, ^, B, R, q1>
+<q0, B, B, R, q1>
+### Bad values
+<q0, ~, ~, R, ):>
+<q0, ;, ;, R, ):>
+<q0, +, +, R, ):>
+<q0, *, *, R, ):>
+<q0, ^., ^., R, ):>
+<q0, 1., 1., R, ):>
+<q0, ;., ;., R, ):>
+<q0, $., $., R, ):>
+
+### q1: is empty set, remove asterisks
+<q1, B, B, R, q1>
+<q1, 1, 1, R, q1>
+<q1, *, B, R, q1>
+<q1, ^, ^, L, M0>
+<q1, +, +, L, H0>
+### Bad values
+<q1, ~, ~, R, ):>
+<q1, ;, ;, R, ):>
+<q1, $, $, R, ):>
+<q1, ^., ^., R, ):>
+<q1, 1., 1., R, ):>
+<q1, ;., ;., R, ):>
+<q1, $., $., R, ):>
+
+### Q1: Begin the new set (greater than pivot) with a (^)
+<Q1, *, ^, L, Q1>
+<Q1, B, B, L, Q1>
+<Q1, 1, 1, L, Q1>
+<Q1, $, $, L, Q1>
+<Q1, ;, ;, L, Q1>
+<Q1, 1., 1, R, Q2>
+<Q1, ;., ;, R, Q2>
+<Q1, ^, ^, R, Q2>
+### Bad values
+<Q1, ~, ~, R, ):>
+<Q1, +, +, R, ):>
+<Q1, ^., ^., R, ):>
+<Q1, $., $., R, ):>
+
+### Q2: Begin test that current value is greater than pivot. Mark current value
+<Q2, 1, 1., R, Q3>
+<Q2, ;, ;., R, Q4>
+<Q2, $, $, R, C0>
+### Bad values
+<Q2, ~, ~, R, ):>
+<Q2, ^, ^, R, ):>
+<Q2, B, B, R, ):>
+<Q2, *, *, R, ):>
+<Q2, +, +, R, ):>
+<Q2, ^., ^., R, ):>
+<Q2, 1., 1., R, ):>
+<Q2, ;., ;., R, ):>
+<Q2, $., $., R, ):>
+
+### Q3: Go to pivot
+<Q3, B, B, R, Q5>
+<Q3, 1, 1, R, Q3>
+<Q3, ;, ;, R, Q3>
+<Q3, $, $, R, Q3>
+### Bad values
+<Q3, ~, ~, R, ):>
+<Q3, ^, ^, R, ):>
+<Q3, +, +, R, ):>
+<Q3, *, *, R, ):>
+<Q3, ^., ^., R, ):>
+<Q3, 1., 1., R, ):>
+<Q3, ;., ;., R, ):>
+<Q3, $., $., R, ):>
+
+### Q4: Go to pivot to clear markers
+<Q4, 1, 1, R, Q4>
+<Q4, ;, ;, R, Q4>
+<Q4, $, $, R, Q4>
+<Q4, B, B, R, Q6>
+### Bad values
+<Q4, ~, ~, R, ):>
+<Q4, ^, ^, R, ):>
+<Q4, +, +, R, ):>
+<Q4, *, *, R, ):>
+<Q4, ^., ^., R, ):>
+<Q4, 1., 1., R, ):>
+<Q4, ;., ;., R, ):>
+<Q4, $., $., R, ):>
+
+### Q5: Mark entry in pivot
+<Q5, 1., 1., R, Q5>
+<Q5, 1, 1., L, Q7>
+<Q5, B, B, L, Q8>
+### Bad values
+<Q5, ~, ~, R, ):>
+<Q5, ^, ^, R, ):>
+<Q5, ;, ;, R, ):>
+<Q5, $, $, R, ):>
+<Q5, +, +, R, ):>
+<Q5, *, *, R, ):>
+<Q5, ^., ^., R, ):>
+<Q5, ;., ;., R, ):>
+<Q5, $., $., R, ):>
+
+### Q6: Clear markers in pivot
+<Q6, 1., 1, R, Q6>
+<Q6, B, B, L, Q1>
+<Q6, 1, 1, L, Q1>
+### Bad values
+<Q6, ~, ~, R, ):>
+<Q6, ^, ^, R, ):>
+<Q6, ;, ;, R, ):>
+<Q6, $, $, R, ):>
+<Q6, +, +, R, ):>
+<Q6, *, *, R, ):>
+<Q6, ^., ^., R, ):>
+<Q6, ;., ;., R, ):>
+<Q6, $., $., R, ):>
+
+### Q7: Move back to blank, then Q1
+<Q7, 1., 1., L, Q7>
+<Q7, B, B, L, Q1>
+### Bad values
+<Q7, ~, ~, R, ):>
+<Q7, ^, ^, R, ):>
+<Q7, 1, 1, R, ):>
+<Q7, ;, ;, R, ):>
+<Q7, $, $, R, ):>
+<Q7, +, +, R, ):>
+<Q7, *, *, R, ):>
+<Q7, ^., ^., R, ):>
+<Q7, ;., ;., R, ):>
+<Q7, $., $., R, ):>
+
+### Q8: Number needs to be moved over, move mark to beginning
+<Q8, 1., 1, L, Q8>
+<Q8, B, B, L, Q9>
+### Bad values
+<Q8, $, $, L, ):>
+<Q8, ;, ;, L, ):>
+<Q8, 1, 1., L, ):>
+<Q8, ~, ~, R, ):>
+<Q8, ^, ^, R, ):>
+<Q8, +, +, R, ):>
+<Q8, *, *, R, ):>
+<Q8, ^., ^., R, ):>
+<Q8, ;., ;., R, ):>
+<Q8, $., $., R, ):>
+
+### Q9: Get rid of marker
+<Q9, $, $, L, Q9>
+<Q9, ;, ;, L, Q9>
+<Q9, 1, 1, L, Q9>
+<Q9, 1., 1, L, T0>
+### Bad values
+<Q9, ~, ~, R, ):>
+<Q9, ^, ^, R, ):>
+<Q9, B, B, R, ):>
+<Q9, +, +, R, ):>
+<Q9, *, *, R, ):>
+<Q9, ^., ^., R, ):>
+<Q9, ;., ;., R, ):>
+<Q9, $., $., R, ):>
+
+## Subprocess T: Transfer larger value to other side of pivot
+
+### T0 go to beginning of current number
+<T0, 1, 1, L, T0>
+<T0, ;, ;, R, T1>
+<T0, ^, ^, R, T1>
+### Bad values
+<T0, ~, ~, R, ):>
+<T0, B, B, R, ):>
+<T0, $, $, R, ):>
+<T0, +, +, R, ):>
+<T0, *, *, R, ):>
+<T0, ^., ^., R, ):>
+<T0, 1., 1., R, ):>
+<T0, ;., ;., R, ):>
+<T0, $., $., R, ):>
+
+### T1: mark current number to begin transfer
+<T1, 1, 1., R, T2>
+<T1, ;, ;., R, T4>
+### Bad values
+<T1, ~, ~, R, ):>
+<T1, ^, ^, R, ):>
+<T1, B, B, R, ):>
+<T1, $, $, R, ):>
+<T1, +, +, R, ):>
+<T1, *, *, R, ):>
+<T1, ^., ^., R, ):>
+<T1, 1., 1., R, ):>
+<T1, ;., ;., R, ):>
+<T1, $., $., R, ):>
+
+### T2: Go to next set and transfer number
+<T2, 1, 1, R, T2>
+<T2, ;, ;, R, T2>
+<T2, $, $, R, T2>
+<T2, B, B, R, T2>
+<T2, 1., 1., R, T2>
+<T2, ^, ^, R, T2>
+<T2, *, 1, L, T3>
+### Bad values
+<T2, ~, ~, R, ):>
+<T2, +, +, R, ):>
+<T2, ^., ^., R, ):>
+<T2, ;., ;., R, ):>
+<T2, $., $., R, ):>
+
+### T3: Go back to marked character and transfer next
+<T3, 1, 1, L, T3>
+<T3, ^, ^, L, T3>
+<T3, B, B, L, T3>
+<T3, $, $, L, T3>
+<T3, ;, ;, L, T3>
+<T3, 1., 1., R, T1>
+<T3, ;., ;., R, Q2>
+### Bad values
+<T3, ~, ~, R, ):>
+<T3, +, +, R, ):>
+<T3, *, *, R, ):>
+<T3, ^., ^., R, ):>
+<T3, $., $., R, ):>
+
+### T4: Go to next set and transfer ;
+<T4, 1, 1, R, T4>
+<T4, ;, ;, R, T4>
+<T4, $, $, R, T4>
+<T4, B, B, R, T4>
+<T4, 1., 1., R, T4>
+<T4, ^, ^, R, T4>
+<T4, *, ;, L, T3>
+### Bad values
+<T4, ~, ~, R, ):>
+<T4, +, +, R, ):>
+<T4, ^., ^., R, ):>
+<T4, ;., ;., R, ):>
+<T4, $., $., R, ):>
+
+## Subprocess C: clear marked spaces and go back to start
+
+### C0: Go to asterisks to begin clearing
+<C0, B, B, R, C0>
+<C0, 1, 1, R, C0>
+<C0, ^, ^, R, C0>
+<C0, ;, ;, R, C0>
+<C0, *, $, R, C1>
+### Bad values
+<C0, ~, ~, R, ):>
+<C0, $, $, R, ):>
+<C0, +, +, R, ):>
+<C0, ^., ^., R, ):>
+<C0, 1., 1., R, ):>
+<C0, ;., ;., R, ):>
+<C0, $., $., R, ):>
+
+### C1: Clear all remaining asterisks
+<C1, *, B, R, C1>
+<C1, B, B, L, C2>
+<C1, +, +, L, C2>
+### Bad values
+<C1, ~, ~, R, ):>
+<C1, ^, ^, R, ):>
+<C1, 1, 1, R, ):>
+<C1, ;, ;, R, ):>
+<C1, $, $, R, ):>
+<C1, ^., ^., R, ):>
+<C1, 1., 1., R, ):>
+<C1, ;., ;., R, ):>
+<C1, $., $., R, ):>
+
+### C2: Go back to left to clear marked numbers
+<C2, ~, ~, R, F2>
+<C2, ^, ^, L, C2>
+<C2, 1, 1, L, C2>
+<C2, ;, ;, L, C2>
+<C2, B, B, L, C2>
+<C2, $, $, L, C2>
+<C2, 1., *, L, C3>
+<C2, ;., *, L, C3>
+### Bad values
+<C2, +, +, R, ):>
+<C2, *, *, R, ):>
+<C2, ^., ^., R, ):>
+<C2, $., $., R, ):>
+
+### C3: Mark character to move over
+<C3, 1., 1., L, C3>
+<C3, ;., ;., L, C3>
+<C3, 1, 1., R, c1>
+<C3, ;, ;., R, c;>
+<C3, ^, ^., R, c^>
+<C3, ^., B, R, C4>
+### Bad values
+<C3, ~, ~, R, ):>
+<C3, B, B, R, ):>
+<C3, $, $, R, ):>
+<C3, +, +, R, ):>
+<C3, *, *, R, ):>
+<C3, $., $., R, ):>
+
+### C4: Get rid of marked characters
+<C4, *, B, R, M0>
+<C4, 1., B, R, C4>
+<C4, ;., B, R, C4>
+### Bad values
+<C4, ~, ~, R, ):>
+<C4, ^, ^, R, ):>
+<C4, B, B, R, ):>
+<C4, 1, 1, R, ):>
+<C4, ;, ;, R, ):>
+<C4, $, $, R, ):>
+<C4, +, +, R, ):>
+<C4, ^., ^., R, ):>
+<C4, $., $., R, ):>
+
+### C5: Move tilde to start
+<C5, B, ~, R, C5>
+<C5, ^, ^, L, M0>
+<C5, 1, 1, R, F2>
+### Bad values
+<C5, ~, ~, R, ):>
+<C5, ;, ;, R, ):>
+<C5, $, $, R, ):>
+<C5, +, +, R, ):>
+<C5, *, *, R, ):>
+<C5, ^., ^., R, ):>
+<C5, 1., 1., R, ):>
+<C5, ;., ;., R, ):>
+<C5, $., $., R, ):>
+
+
+### c;
+<c;, 1., 1., R, c;>
+<c;, ;., ;., R, c;>
+<c;, *, ;, L, C2>
+### Bad values
+<c;, ~, ~, R, ):>
+<c;, ^, ^, R, ):>
+<c;, B, B, R, ):>
+<c;, 1, 1, R, ):>
+<c;, ;, ;, R, ):>
+<c;, $, $, R, ):>
+<c;, +, +, R, ):>
+<c;, ^., ^., R, ):>
+<c;, $., $., R, ):>
+
+### c1
+<c1, 1., 1., R, c1>
+<c1, ;., ;., R, c1>
+<c1, *, 1, L, C2>
+### Bad values
+<c1, ~, ~, R, ):>
+<c1, ^, ^, R, ):>
+<c1, B, B, R, ):>
+<c1, 1, 1, R, ):>
+<c1, ;, ;, R, ):>
+<c1, $, $, R, ):>
+<c1, +, +, R, ):>
+<c1, ^., ^., R, ):>
+<c1, $., $., R, ):>
+
+### c^
+<c^, 1., 1., R, c^>
+<c^, ;., ;., R, c^>
+<c^, *, ^, L, C2>
+### Bad values
+<c^, ~, ~, R, ):>
+<c^, ^, ^, R, ):>
+<c^, B, B, R, ):>
+<c^, 1, 1, R, ):>
+<c^, ;, ;, R, ):>
+<c^, $, $, R, ):>
+<c^, +, +, R, ):>
+<c^, ^., ^., R, ):>
+<c^, $., $., R, ):>
+
+## Subprocess H: sorted, remove spaces and halt
+
+### H0: go back to start
+<H0, ~, *, R, H1>
+<H0, B, B, L, H0>
+<H0, 1, 1, L, H0>
+<H0, *, 1, R, H2>
+<H0, 1., 1., L, H0>
+### Bad values
+<H0, ^, ^, R, ):>
+<H0, ;, ;, R, ):>
+<H0, $, $, R, ):>
+<H0, +, +, R, ):>
+<H0, ^., ^., R, ):>
+<H0, ;., ;., R, ):>
+<H0, $., $., R, ):>
+
+### H1: Find first number for copying
+<H1, B, B, R, H1>
+<H1, 1, 1., L, H0>
+<H1, 1., 1., R, H3>
+### Bad values
+<H1, ~, ~, R, ):>
+<H1, ^, ^, R, ):>
+<H1, ;, ;, R, ):>
+<H1, $, $, R, ):>
+<H1, +, +, R, ):>
+<H1, *, *, R, ):>
+<H1, ^., ^., R, ):>
+<H1, ;., ;., R, ):>
+<H1, $., $., R, ):>
+
+### H2: move copy mark forward
+<H2, B, *, R, H1>
+### Bad values
+<H2, ~, ~, R, ):>
+<H2, ^, ^, R, ):>
+<H2, 1, 1, R, ):>
+<H2, ;, ;, R, ):>
+<H2, $, $, R, ):>
+<H2, +, +, R, ):>
+<H2, *, *, R, ):>
+<H2, ^., ^., R, ):>
+<H2, 1., 1., R, ):>
+<H2, ;., ;., R, ):>
+<H2, $., $., R, ):>
+
+### H3: Find next number for copying
+<H3, 1., 1., R, H3>
+<H3, 1, 1., L, H0>
+<H3, B, B, R, H4>
+### Bad values
+<H3, ~, ~, R, ):>
+<H3, ^, ^, R, ):>
+<H3, ;, ;, R, ):>
+<H3, $, $, R, ):>
+<H3, +, +, R, ):>
+<H3, *, *, R, ):>
+<H3, ^., ^., R, ):>
+<H3, ;., ;., R, ):>
+<H3, $., $., R, ):>
+
+### H4: Move mark forward, replace with blank
+<H4, B, B, L, H4>
+<H4, 1., 1., L, H4>
+<H4, *, B, R, H5>
+### Bad values
+<H4, ~, ~, R, ):>
+<H4, ^, ^, R, ):>
+<H4, 1, 1, R, ):>
+<H4, ;, ;, R, ):>
+<H4, $, $, R, ):>
+<H4, +, +, R, ):>
+<H4, ^., ^., R, ):>
+<H4, ;., ;., R, ):>
+<H4, $., $., R, ):>
+
+### H5: Move mark and clear (1.)
+<H5, B, *, R, H6>
+### Bad values
+<H5, ~, ~, R, ):>
+<H5, ^, ^, R, ):>
+<H5, 1, 1, R, ):>
+<H5, ;, ;, R, ):>
+<H5, $, $, R, ):>
+<H5, +, +, R, ):>
+<H5, *, *, R, ):>
+<H5, ^., ^., R, ):>
+<H5, 1., 1., R, ):>
+<H5, ;., ;., R, ):>
+<H5, $., $., R, ):>
+
+### H6: Clear 1.
+<H6, B, B, R, H6>
+<H6, 1., B, R, H6>
+<H6, 1, 1., L, H0>
+<H6, +, B, L, H7>
+### Bad values
+<H6, ~, ~, R, ):>
+<H6, ^, ^, R, ):>
+<H6, ;, ;, R, ):>
+<H6, $, $, R, ):>
+<H6, *, *, R, ):>
+<H6, ^., ^., R, ):>
+<H6, ;., ;., R, ):>
+<H6, $., $., R, ):>
+
+### H7: Clear the mark and go back to start
+<H7, B, B, L, H7>
+<H7, *, B, L, H8>
+### Bad values
+<H7, ~, ~, R, ):>
+<H7, ^, ^, R, ):>
+<H7, 1, 1, R, ):>
+<H7, ;, ;, R, ):>
+<H7, $, $, R, ):>
+<H7, +, +, R, ):>
+<H7, ^., ^., R, ):>
+<H7, 1., 1., R, ):>
+<H7, ;., ;., R, ):>
+<H7, $., $., R, ):>
+
+### H8: Go back to start
+<H8, B, B, L, H9>
+<H8, 1, 1, L, H8>
+### Bad values
+<H8, ~, ~, R, ):>
+<H8, ^, ^, R, ):>
+<H8, ;, ;, R, ):>
+<H8, $, $, R, ):>
+<H8, +, +, R, ):>
+<H8, *, *, R, ):>
+<H8, ^., ^., R, ):>
+<H8, 1., 1., R, ):>
+<H8, ;., ;., R, ):>
+<H8, $., $., R, ):>
+
+### H9:
+<H9, B, B, R, hh>
+<H9, 1, 1, L, H8>
+### Bad values
+<H9, ~, ~, R, ):>
+<H9, ^, ^, R, ):>
+<H9, ;, ;, R, ):>
+<H9, $, $, R, ):>
+<H9, +, +, R, ):>
+<H9, *, *, R, ):>
+<H9, ^., ^., R, ):>
+<H9, 1., 1., R, ):>
+<H9, ;., ;., R, ):>
+<H9, $., $., R, ):>
+
+### hh:
+<hh, B, B, R, (:>
+### Bad values
+<hh, ~, ~, R, ):>
+<hh, ^, ^, R, ):>
+<hh, 1, 1, R, ):>
+<hh, ;, ;, R, ):>
+<hh, $, $, R, ):>
+<hh, +, +, R, ):>
+<hh, *, *, R, ):>
+<hh, ^., ^., R, ):>
+<hh, 1., 1., R, ):>
+<hh, ;., ;., R, ):>
+<hh, $., $., R, ):>
