@@ -41,7 +41,7 @@ In my program, these are represented by the following in order in a
 
    ```python
    # States
-   {State0, State1, ..., (:, ):}
+   {State0, State1, ..., (:}
    ```
 States are represented by a single line contained in braces, with
 named state strings separated by commas.
@@ -58,7 +58,7 @@ The initial state must be one of the named states in the states set.
 
    ```python
    # Final states
-   {(:, ):, ...}
+   {(:, ...}
    ```
 The final states are written in the same format as the states, and all
 of the final states must be contained in the states set. I typically
@@ -87,7 +87,7 @@ The blank is a single string that is also contained in the alphabet.
 
    ```python
    # Input alphabet
-   {1, ...}
+   {0, 1, ...}
    ```
 The input alphabet is provided in the same format as the alphabet, and
 all strings in the input alphabet must be in the alphabet. The blank
@@ -97,14 +97,14 @@ may not be included as part of the input alphabet.
 
    ```python
    # Transition function
-   <State0, B, 0, r, ):>
-   <State0, 0, 0, r, ):>
-   <State0, 1, 0, r, ):>
+   <State0, B, B, r, State0>
+   <State0, 0, 0, r, State0>
+   <State0, 1, B, r, State1>
    ...
 
-   <State1, B, 0, r, ):>
-   <State1, 0, 0, r, ):>
-   <State1, 1, 0, r, ):>
+   <State1, B, 1, r, (:>
+   <State1, 0, 1, r, (:>
+   <State1, 1, 1, r, State1>
    ...
 
    ...
