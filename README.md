@@ -43,7 +43,6 @@ In my program, these are represented by the following in order in a
    # States
    {State0, State1, ..., (:, ):}
    ```
-
 States are represented by a single line contained in braces, with
 named state strings separated by commas.
 
@@ -53,7 +52,6 @@ named state strings separated by commas.
    # Initial state
    State0
    ```
-
 The initial state must be one of the named states in the states set.
 
 3. _**Final states**_:
@@ -62,7 +60,6 @@ The initial state must be one of the named states in the states set.
    # Final states
    {(:, ):, ...}
    ```
-
 The final states are written in the same format as the states, and all
 of the final states must be contained in the states set. I typically
 use ```(:``` for a successful completion and ```):``` for an
@@ -74,7 +71,6 @@ unsuccessful completion.
    # Alphabet
    {B, 0, 1, ...}
    ```
-
 The alphabet is provided in the same format as the states. I typically
 use single-character strings for nice print display, but this is not
 necessary.
@@ -85,7 +81,6 @@ necessary.
    # Blank
    B
    ```
-
 The blank is a single string that is also contained in the alphabet.
 
 6. _**Input alphabet**_: 
@@ -94,7 +89,6 @@ The blank is a single string that is also contained in the alphabet.
    # Input alphabet
    {1, ...}
    ```
-
 The input alphabet is provided in the same format as the alphabet, and
 all strings in the input alphabet must be in the alphabet. The blank
 may not be included as part of the input alphabet.
@@ -114,14 +108,12 @@ may not be included as part of the input alphabet.
 
    ...
    ```
-
 The transition function is provided as a series of 5-tuples, contained
 in angle brackets and separated by commas. These are
 
    ```python
    < current state, read value, write value, move direction, next state >
    ```
-
 A line reads as follows: if the machine is in ```current state``` and
 reads ```read value```, then it replaces that with ```write value```,
 moves one square in ```move direction```, and enters ```next state```.
