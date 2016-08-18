@@ -117,8 +117,7 @@ in angle brackets and separated by commas. These are
 A line reads as follows: if the machine is in ```current state``` and
 reads ```read value```, then it replaces that with ```write value```,
 moves one square in ```move direction```, and enters ```next
-   state```.  
-Every single combination of the states minus the final states and
+   state```. Every single combination of the states minus the final states and
 the possible read values (i.e. the whole alphabet) must be provided
 a write value, move direction, and next state.
 
