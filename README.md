@@ -112,7 +112,7 @@ may not be included as part of the input alphabet.
 The transition function is provided as a series of 5-tuples, contained
 in angle brackets and separated by commas. These are
 
-   ```python
+   ```
    < current state, read value, write value, move direction, next state >
    ```
 A line reads as follows: if the machine is in ```current state``` and
