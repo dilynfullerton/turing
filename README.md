@@ -96,6 +96,7 @@ may not be included as part of the input alphabet.
 7. _**Transition function**_: 
 
    ```python
+   # Transition function
    <State0, B, 0, r, ):>
    <State0, 0, 0, r, ):>
    <State0, 1, 0, r, ):>
