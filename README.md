@@ -126,17 +126,17 @@ a write value, move direction, and next state.
 ---
 The following are example Turing machine algorithms that I wrote.
 
-* ```binary_copy.txt```: Copies a binary number
-* ```collatz.txt```: Performs the algorithm of the Collatz Conjecture
+* [```binary_copy.txt```](```./examples/binary_copy.txt```): Copies a binary number
+* [```collatz.txt```](```./examples/collatz.txt```): Performs the algorithm of the Collatz Conjecture
 and creates a recording of the actions performed. 
-* ```factorial.txt```: Performs the factorial of the given nubmer.
-* ```infinite_print.txt```: Infinite printer, to demonstrate a
+* [```factorial.txt```](```./examples/factorial.txt```): Performs the factorial of the given nubmer.
+* [```infinite_print.txt```](```./examples/infinite_print.txt```): Infinite printer, to demonstrate a
 non-halting Turing maching.
-* ```is_prime.txt```: Tests if the given number is prime.
-* ```nand.txt```: Fundamental logic gate.
-* ```negator.txt```: Negator, as part of the proof sketch that a
+* [```is_prime.txt```](```./examples/is_prime.txt```): Tests if the given number is prime.
+* [```nand.txt```](```./examples/nand.txt```): Fundamental logic gate.
+* [```negator.txt```](```./examples/negator.txt```): Negator, as part of the proof sketch that a
 Universal Turing Machine that solves the halting problem cannot exist.
-* ```quicksort.txt```: Sorts a series of integers in place.
+* [```quicksort.txt```](```./examples/quicksort.txt```): Sorts a series of integers in place.
 
 ### About Turing Machines
 ---
