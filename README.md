@@ -38,6 +38,7 @@ In my program, these are represented by the following in order in a
 \*.txt file.
 
 1. _**States**_:
+
    ```python
    # States
    {State0, State1, ..., (:, ):}
@@ -47,6 +48,7 @@ States are represented by a single line contained in braces, with
 named state strings separated by commas.
 
 2. _**Initial state**_:
+
    ```python
    # Initial state
    State0
@@ -55,6 +57,7 @@ named state strings separated by commas.
 The initial state must be one of the named states in the states set.
 
 3. _**Final states**_:
+
    ```python
    # Final states
    {(:, ):, ...}
@@ -66,6 +69,7 @@ use ```(:``` for a successful completion and ```):``` for an
 unsuccessful completion.
 
 4. _**Alphabet**_:
+
    ```python
    # Alphabet
    {B, 0, 1, ...}
@@ -76,6 +80,7 @@ use single-character strings for nice print display, but this is not
 necessary.
 
 5. _**Blank**_: 
+
    ```python
    # Blank
    B
@@ -84,6 +89,7 @@ necessary.
 The blank is a single string that is also contained in the alphabet.
 
 6. _**Input alphabet**_: 
+
    ```python
    # Input alphabet
    {1, ...}
